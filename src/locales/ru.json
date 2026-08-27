@@ -1,0 +1,29 @@
+{
+  "nav": {
+    "home": "Главная",
+    "quran": "Коран",
+    "profile": "Профиль"
+  },
+  "home": {
+    "quotes": "Цитаты",
+    "daysurah": {
+      "title": "Сура Дня",
+      "subtitle": "Рекомендовано для прочтения"
+    },
+    "lastread": {
+      "title": "Продолжи чтение!",
+      "subtitle": "Учение - твой путь к хифзу!",
+      "continue": "Продолжить"
+    }
+  },
+  "quran": {
+    "reciter": "Чтец",
+    "translation": "Перевод",
+    "tafsir": "Тафсир",
+    "riwayah": "Риваят"
+  },
+  "userTier": {
+    "premium": "Премиум",
+    "default": "Обыватель"
+  }
+}

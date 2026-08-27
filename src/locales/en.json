@@ -1,0 +1,29 @@
+{
+  "nav": {
+    "home": "Home",
+    "quran": "Quran",
+    "profile": "Profile"
+  },
+  "home": {
+    "quotes": "Quotes",
+    "daysurah": {
+      "title": "Surah of the Day",
+      "subtitle": "Recommended daily reading"
+    },
+    "lastread": {
+      "title": "Last Read",
+      "subtitle": "Learning is the path to hifz!",
+      "continue": "Continue reading"
+    }
+  },
+  "quran": {
+    "reciter": "Reciter",
+    "translation": "Translation",
+    "tafsir": "Tafsir",
+    "riwayah": "Riwayah"
+  },
+  "userTier": {
+    "premium": "Premium",
+    "default": "Default"
+  }
+}
