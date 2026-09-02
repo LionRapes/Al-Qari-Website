@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import IconQuotes from '../icons/IconQuotes.vue'
+import IconQuotes from '@/components/icons/IconQuotes.vue'
 
 defineProps<{
   title?: string

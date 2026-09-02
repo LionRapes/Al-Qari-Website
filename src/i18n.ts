@@ -2,16 +2,23 @@ import { createI18n } from 'vue-i18n'
 import en from './locales/en.json'
 import ru from './locales/ru.json'
 
-type MessageSchema = typeof en
+const messages = {
+  en,
+  ru,
+}
+const supportedLocales = Object.keys(messages)
 
-const i18n = createI18n<[MessageSchema], 'en' | 'ru'>({
+function getBrowserLocale(): string {
+  const navigatorLocale = navigator.languages?.[0] ?? navigator.language ?? 'en'
+  const lang = navigatorLocale.trim().split(/-|_/)[0]!.toLowerCase()
+  return supportedLocales.includes(lang) ? lang : 'en'
+}
+
+const i18n = createI18n({
   legacy: false,
-  locale: 'ru',
+  locale: getBrowserLocale(),
   fallbackLocale: 'en',
-  messages: {
-    en,
-    ru,
-  },
+  messages,
 })
 
 export default i18n

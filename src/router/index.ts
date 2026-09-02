@@ -15,9 +15,24 @@ const router = createRouter({
       component: () => import('../views/QuranView.vue'),
     },
     {
+      path: '/quran/:id',
+      name: 'surah',
+      component: () => import('../views/SurahView.vue'),
+    },
+    {
       path: '/profile',
       name: 'profile',
       component: () => import('../views/ProfileView.vue'),
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/LoginView.vue'),
+    },
+    {
+      path: '/auth/verify',
+      name: 'verify',
+      component: () => import('../views/VerifyView.vue'),
     },
   ],
 })

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import IconChevron from '../icons/IconChevron.vue'
+import IconChevron from '@/components/icons/IconChevron.vue'
 import ProgressRing from './ProgressRing.vue'
 
 defineProps<{

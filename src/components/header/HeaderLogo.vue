@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import IconBook from '../icons/IconBook.vue'
-import IconHamburger from '../icons/IconHamburger.vue'
-import IconClose from '../icons/IconClose.vue'
+import IconBook from '@/components/icons/IconBook.vue'
+import IconHamburger from '@/components/icons/IconHamburger.vue'
+import IconClose from '@/components/icons/IconClose.vue'
 
 defineProps<{
   isMobileMenuOpen: boolean

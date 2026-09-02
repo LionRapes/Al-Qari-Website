@@ -1,25 +1,21 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import IconChevron from '../icons/IconChevron.vue'
-
-interface Option {
-  id: string | number
-  label: string
-}
+import type { DropdownOption } from '@/types/index.ts'
 
 defineProps<{
   title: string
-  options: Option[]
-  modelValue: Option | null
+  options: DropdownOption[]
+  modelValue: DropdownOption | null
 }>()
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: Option): void
+  (e: 'update:modelValue', value: DropdownOption): void
 }>()
 
 const isOpen = ref(false)
 
-const selectOption = (option: Option) => {
+const selectOption = (option: DropdownOption) => {
   emit('update:modelValue', option)
   isOpen.value = false
 }

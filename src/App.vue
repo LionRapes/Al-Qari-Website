@@ -2,6 +2,7 @@
 import TheHeader from './components/header/TheHeader.vue'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import AudioPlayer from './components/quran/AudioPlayer.vue'
 
 const { t } = useI18n()
 
@@ -15,19 +16,27 @@ const navigation = computed(() => [
   <div class="min-h-screen bg-base-gradient text-text-base font-sans pb-12">
     <TheHeader :navigation="navigation" />
 
-    <router-view v-slot="{ Component }">
-      <transition name="fade" mode="out-in">
-        <component :is="Component" />
-      </transition>
-    </router-view>
+    <div class="grid w-full">
+      <router-view v-slot="{ Component }">
+        <transition name="fade" mode="default">
+          <component :is="Component" class="col-start-1 row-start-1 w-full" />
+        </transition>
+      </router-view>
+    </div>
+    <AudioPlayer />
   </div>
 </template>
 
 <style>
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.2s ease;
+  transition: opacity 0.4s ease-in-out;
 }
+
+.fade-leave-active {
+  pointer-events: none;
+}
+
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;

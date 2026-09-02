@@ -1,133 +1,169 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAudioPlayer } from '@/composables/useAudioPlayer'
+import { useLazyScroll } from '@/composables/useLazyScroll'
+import { useQuranData } from '@/composables/useQuranData'
+
 import SidebarDropdown from '../components/quran/SidebarDropdown.vue'
 import IconBook from '@/components/icons/IconBook.vue'
 import IconTranslation from '@/components/icons/IconTranslation.vue'
 import IconAudio from '@/components/icons/IconAudio.vue'
 import IconRiwayah from '@/components/icons/IconRiwayah.vue'
-import AudioCard from '@/components/quran/AudioCard.vue'
+import SurahCard from '@/components/quran/SurahCard.vue'
 
-const selectedReciter = ref({ id: 'mishary', label: 'Mishary Rashid Alafasy' })
-const selectedLanguage = ref({ id: 'ru', label: 'Русский' })
-const selectedTafsir = ref({ id: 'sadi', label: "Tafsir As-Sa'di" })
-const selectedRiwayah = ref({ id: 'hafs', label: "Hafs 'an 'Asim" })
+const router = useRouter()
 
-const reciters = [
-  { id: 'mishary', label: 'Mishary Rashid Alafasy' },
-  { id: 'abdulbasit', label: "Abdul Basit 'Abd us-Samad" },
-  { id: 'husary', label: 'Mahmoud Khalil Al-Husary' },
-]
+const {
+  isLoadingMetadata,
+  isFetchingNetwork,
+  selectedReciter,
+  selectedLanguage,
+  selectedTafsir,
+  selectedRiwayah,
+  dropdownOptions,
+  audioCards,
+  initData,
+  getTranscriptionLang,
+} = useQuranData()
 
-const languages = [
-  { id: 'ru', label: 'Русский (Russian)' },
-  { id: 'en', label: 'English' },
-  { id: 'ar', label: 'العربية (Arabic)' },
-]
+const { activeSurahId, isPlaying, playToggle, trackTitle } = useAudioPlayer()
 
-const tafsirs = [
-  { id: 'sadi', label: "Tafsir As-Sa'di" },
-  { id: 'jalalayn', label: 'Tafsir Al-Jalalayn' },
-  { id: 'ibnkathir', label: 'Tafsir Ibn Kathir' },
-]
+const BATCH_SIZE = 12
+const visibleCount = ref(0)
+const visibleAudioCards = computed(() => audioCards.value.slice(0, visibleCount.value))
 
-const riwayahs = [
-  { id: 'hafs', label: "Hafs 'an 'Asim" },
-  { id: 'warsh', label: "Warsh 'an Nafi'" },
-  { id: 'qalun', label: "Qalun 'an Nafi'" },
-]
+const { containerRef, triggerRef } = useLazyScroll(() => {
+  if (visibleCount.value < audioCards.value.length) {
+    visibleCount.value += BATCH_SIZE
+  }
+})
 
-const audioCards = ref([
-  {
-    title: 'Аль-Бакара',
-    subtitle: 'Аяты 235 – 237',
-    desc: 'Аятуль-Курси и продолжение',
-    time: '2:15',
-    isPlaying: false,
-  },
-  {
-    title: 'Аль-Мульк',
-    subtitle: 'Аяты 1 – 12',
-    desc: 'Ежедневное повторение перед сном',
-    time: '4:30',
-    isPlaying: false,
-  },
-  {
-    title: 'Аль-Мульк',
-    subtitle: 'Аяты 1 – 13',
-    desc: 'Ежедневное повторение перед сном',
-    time: '4:30',
-    isPlaying: false,
-  },
-  {
-    title: 'Аль-Мульк',
-    subtitle: 'Аяты 1 – 10',
-    desc: 'Защита от Даджаля',
-    time: '1:45',
-    isPlaying: false,
-  },
-  {
-    title: 'Аль-Кахф',
-    subtitle: 'Аяты 1 – 10',
-    desc: 'Защита от Даджаля',
-    time: '5:20',
-    isPlaying: false,
-  },
-  { title: 'Ясин', subtitle: 'Аяты 1 – 12', desc: 'Сердце Корана', time: '3:10', isPlaying: false },
-])
+const navigateToSurah = (surahId: number) => {
+  router.push({
+    path: `/quran/${surahId}`,
+    query: {
+      riwayah: selectedRiwayah.value?.id,
+      lang: selectedLanguage.value?.id,
+      tafsir: selectedTafsir.value?.id,
+      transcription: getTranscriptionLang(),
+      reciter: selectedReciter.value?.id,
+    },
+  })
+}
+
+onMounted(async () => {
+  await initData()
+  visibleCount.value = BATCH_SIZE
+})
+
+watch(selectedReciter, (newReciter, oldReciter) => {
+  if (newReciter?.id !== oldReciter?.id && activeSurahId.value !== null) {
+    playToggle(activeSurahId.value, selectedRiwayah.value?.id as string, newReciter?.id as string, {
+      title: trackTitle.value,
+      reciter: newReciter?.label as string,
+    })
+  }
+})
 </script>
 
 <template>
-  <main class="max-w-350 mx-auto px-8 mt-6">
+  <main class="max-w-350 mx-auto px-8 mt-6 pb-6">
     <div class="flex flex-col-reverse lg:flex-row gap-10">
-      <!-- LEFT AREA: Main Content (Quran Reader) -->
-      <div class="flex-1 min-h-149 bg-bg-surface border border-border-theme rounded-3xl p-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <AudioCard
-            v-for="(card, idx) in audioCards"
-            :key="idx"
+      <!-- LEFT AREA -->
+      <div
+        ref="containerRef"
+        class="flex-1 h-[75vh] lg:h-[calc(100vh-8rem)] max-h-142 overflow-y-auto custom-scrollbar bg-bg-surface border border-border-theme rounded-3xl p-8"
+      >
+        <div v-if="isFetchingNetwork" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div
+            v-for="i in BATCH_SIZE"
+            :key="i"
+            class="h-32 bg-bg-surface-hover rounded-2xl border border-border-theme animate-pulse"
+          ></div>
+        </div>
+
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <SurahCard
+            v-for="card in visibleAudioCards"
+            :key="card.id"
+            :id="card.id"
             :title="card.title"
             :subtitle="card.subtitle"
             :desc="card.desc"
-            :time="card.time"
-            :is-playing="card.isPlaying"
+            :is-playing="activeSurahId === card.id && isPlaying"
+            @click="navigateToSurah(card.id)"
+            @play-toggle="
+              (id) =>
+                playToggle(id, selectedRiwayah?.id as string, selectedReciter?.id as string, {
+                  title: card.title,
+                  reciter: selectedReciter?.label as string,
+                })
+            "
           />
         </div>
+
+        <div ref="triggerRef" class="h-10 w-full mt-4"></div>
       </div>
 
-      <!-- RIGHT AREA: Sidebar Menus -->
+      <!-- RIGHT AREA -->
       <aside class="w-full lg:w-80 shrink-0 flex flex-col">
-        <!-- Reciter Dropdown -->
-        <SidebarDropdown :title="$t('quran.reciter')" :options="reciters" v-model="selectedReciter">
-          <template #icon>
-            <IconAudio />
-          </template>
-        </SidebarDropdown>
+        <div v-if="isLoadingMetadata" class="animate-pulse flex flex-col gap-4">
+          <div
+            v-for="i in 4"
+            :key="i"
+            class="h-18 bg-bg-surface-hover rounded-2xl w-full border border-border-theme"
+          ></div>
+        </div>
 
-        <!-- Translation/Language Dropdown -->
-        <SidebarDropdown
-          :title="$t('quran.translation')"
-          :options="languages"
-          v-model="selectedLanguage"
-        >
-          <template #icon>
-            <IconTranslation />
-          </template>
-        </SidebarDropdown>
-
-        <!-- Tafsir Dropdown -->
-        <SidebarDropdown :title="$t('quran.tafsir')" :options="tafsirs" v-model="selectedTafsir">
-          <template #icon>
-            <IconBook />
-          </template>
-        </SidebarDropdown>
-
-        <!-- Riwayah Dropdown -->
-        <SidebarDropdown :title="$t('quran.riwayah')" :options="riwayahs" v-model="selectedRiwayah">
-          <template #icon>
-            <IconRiwayah />
-          </template>
-        </SidebarDropdown>
+        <template v-else>
+          <SidebarDropdown
+            :title="$t('quran.reciter')"
+            :options="dropdownOptions.reciters!"
+            v-model="selectedReciter"
+          >
+            <template #icon><IconAudio /></template>
+          </SidebarDropdown>
+          <SidebarDropdown
+            :title="$t('quran.translation')"
+            :options="dropdownOptions.languages!"
+            v-model="selectedLanguage"
+          >
+            <template #icon><IconTranslation /></template>
+          </SidebarDropdown>
+          <SidebarDropdown
+            :title="$t('quran.tafsir')"
+            :options="dropdownOptions.tafsirs!"
+            v-model="selectedTafsir"
+          >
+            <template #icon><IconBook class="w-6 h-6" /></template>
+          </SidebarDropdown>
+          <SidebarDropdown
+            :title="$t('quran.riwayah')"
+            :options="dropdownOptions.riwayahs!"
+            v-model="selectedRiwayah"
+          >
+            <template #icon><IconRiwayah /></template>
+          </SidebarDropdown>
+        </template>
       </aside>
     </div>
   </main>
 </template>
+
+<style scoped>
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  margin-block: 1rem;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-border-theme, #1f3024);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary, #d4af60);
+}
+</style>

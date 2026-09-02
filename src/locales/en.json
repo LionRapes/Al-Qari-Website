@@ -2,7 +2,8 @@
   "nav": {
     "home": "Home",
     "quran": "Quran",
-    "profile": "Profile"
+    "profile": "Profile",
+    "login": "Log in"
   },
   "home": {
     "quotes": "Quotes",
@@ -22,8 +23,48 @@
     "tafsir": "Tafsir",
     "riwayah": "Riwayah"
   },
+  "profile": {
+    "title": "Profile",
+    "subtitle": "Manage your account and preferences",
+    "userId": "User ID",
+    "email": "Email",
+    "nickname": "Username",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "nicknamePlaceholder": "Enter username",
+    "usernameTaken": "This username is already taken",
+    "updateError": "Failed to update profile",
+    "tier": "Subscription Plan",
+    "active": "Active",
+    "logout": "Log Out",
+    "notLoggedIn": "You are not signed in.",
+    "goToLogin": "Go to Login"
+  },
   "userTier": {
     "premium": "Premium",
     "default": "Default"
+  },
+  "login": {
+    "title": "Sign in to Al-Qari",
+    "subtitle": "Enter your email, and we will send you a magic link to sign in without a password.",
+    "successMessage": "Check your email! We have sent you a login link.",
+    "closeTab": "You can close this tab.",
+    "networkError": "Network error. Please try again later.",
+    "emailLabel": "Email address",
+    "sending": "Sending...",
+    "getLink": "Get Link"
+  },
+  "verify": {
+    "verifying": "Authenticating...",
+    "loadingDesc": "Please wait while we verify your magic link.",
+    "errorTitle": "Authentication Error",
+    "tokenMissing": "Verification token was not found in the link.",
+    "linkInvalid": "The link is invalid or has expired.",
+    "tryAgain": "Back to login"
+  },
+  "validation": {
+    "emailInvalid": "Please include an '@' in the email address.",
+    "required": "This field is required."
   }
 }

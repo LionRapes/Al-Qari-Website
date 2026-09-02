@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import IconBookmark from '../icons/IconBookmark.vue'
-import IconInfo from '../icons/IconInfo.vue'
+import IconBookmark from '@/components/icons/IconBookmark.vue'
+import IconInfo from '@/components/icons/IconInfo.vue'
 
 defineProps<{
   title: string
