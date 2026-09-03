@@ -2,22 +2,39 @@
 import { ref, onMounted, watch, computed, nextTick, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 import { useSurahDetails } from '@/composables/useSurahDetails'
-import { useAudioPlayer } from '@/composables/useAudioPlayer'
+import { useAyahPlayback } from '@/composables/useAyahPlayback'
+import { useLastRead } from '@/composables/useLastRead'
 import SurahHeader from '@/components/quran/SurahHeader.vue'
 import AyahCard from '@/components/quran/AyahCard.vue'
-import { useLastRead } from '@/composables/useLastRead'
 
 const route = useRoute()
-const activeAyahNumber = ref<number | null>(null)
 
 const { currentSurah, isLoading, fetchSurah } = useSurahDetails()
-const { activeSurahId, isPlaying, playToggle, exactSeek, currentTime } = useAudioPlayer()
 const { saveLastRead, getLastRead } = useLastRead()
 
 const formattedReciterName = computed(() => {
   const rec = (route.query.reciter as string) || ''
   return rec.replace(/_/g, ' ').replace(' 32k', '')
 })
+
+const displayAyahs = computed(() => currentSurah.value?.ayahs || [])
+
+const { activeAyahNumber, isPlaying, handlePlayAyah, handleCopyVerse } = useAyahPlayback(
+  currentSurah,
+  displayAyahs,
+)
+
+const onPlayClicked = (ayahNumber: number) => {
+  if (!currentSurah.value) return
+  const surahId = Number(route.params.id)
+  handlePlayAyah(ayahNumber, {
+    surahId,
+    riwayahId: (route.query.riwayah as string) || 'hafs',
+    reciterId: (route.query.reciter as string) || 'Abdul-bary_Mohammad_32k',
+    surahName: currentSurah.value.name,
+    reciterName: formattedReciterName.value,
+  })
+}
 
 const ayahElements = ref<HTMLElement[]>([])
 let observer: IntersectionObserver | null = null
@@ -56,29 +73,6 @@ onBeforeUnmount(() => {
   if (observer) observer.disconnect()
 })
 
-const handlePlayAyah = async (ayahNumber: number) => {
-  if (!currentSurah.value) return
-
-  const ayah = currentSurah.value.ayahs.find((a) => a.number === ayahNumber)
-  if (!ayah || !ayah.timestamp) return
-
-  const isActiveAyah = activeAyahNumber.value === ayahNumber
-  const surahId = Number(route.params.id)
-  const riwayahId = route.query.riwayah as string
-  const reciterId = route.query.reciter as string
-
-  if (activeSurahId.value !== surahId) {
-    await playToggle(surahId, riwayahId, reciterId, {
-      title: currentSurah.value.name,
-      reciter: formattedReciterName.value,
-    })
-  } else if (isActiveAyah || !isPlaying.value) {
-    await playToggle(surahId, riwayahId, reciterId)
-  }
-  if (!isActiveAyah) exactSeek(ayah.timestamp.start)
-  activeAyahNumber.value = ayahNumber
-}
-
 const updateLastReadProgress = (ayahNum: number) => {
   if (!currentSurah.value) return
 
@@ -99,18 +93,6 @@ const updateLastReadProgress = (ayahNum: number) => {
   })
 }
 
-watch(currentTime, (newTime) => {
-  if (!currentSurah.value || activeSurahId.value !== currentSurah.value.id) return
-
-  const activeAyah = currentSurah.value.ayahs.find(
-    (a) => a.timestamp && newTime >= a.timestamp.start && newTime <= a.timestamp.end,
-  )
-
-  if (activeAyah && activeAyahNumber.value !== activeAyah.number) {
-    activeAyahNumber.value = activeAyah.number
-  }
-})
-
 const loadSurahData = () => {
   const surahId = Number(route.params.id)
   if (surahId) {
@@ -124,8 +106,6 @@ const loadSurahData = () => {
     )
   }
 }
-
-const handleCopyVerse = (text: string) => navigator.clipboard.writeText(text)
 
 onMounted(loadSurahData)
 watch(() => route.query, loadSurahData, { deep: true })
@@ -154,9 +134,8 @@ watch(() => route.query, loadSurahData, { deep: true })
           />
 
           <div class="flex flex-col">
-            <!-- Scroll Observer Target Wrapper -->
             <div
-              v-for="ayah in currentSurah.ayahs"
+              v-for="ayah in displayAyahs"
               :key="ayah.number"
               ref="ayahElements"
               :data-verse="ayah.number"
@@ -168,7 +147,7 @@ watch(() => route.query, loadSurahData, { deep: true })
                 :transcriptionText="ayah.transcription"
                 :tafsirText="ayah.tafsir"
                 :isPlaying="activeAyahNumber === ayah.number && isPlaying"
-                @play="handlePlayAyah"
+                @play="onPlayClicked"
                 @copy="handleCopyVerse"
               />
             </div>

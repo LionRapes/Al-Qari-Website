@@ -4,7 +4,9 @@ import { usePlaylistsLibrary } from '@/composables/usePlaylistsLibrary'
 import PlaylistSection from '@/components/playlist/PlaylistSection.vue'
 import PlaylistAuthBanner from '@/components/playlist/PlaylistAuthBanner.vue'
 import PlaylistDiscoverSidebar from '@/components/playlist/PlaylistDiscoverSidebar.vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const currentUserId = localStorage.getItem('user_id') || ''
 
 const {
@@ -17,12 +19,27 @@ const {
   fetchPersonalPlaylists,
   fetchPublicPlaylists,
   handleSearch,
+  joinPlaylistByToken,
 } = usePlaylistsLibrary()
 
 onMounted(() => {
   if (currentUserId) fetchPersonalPlaylists(currentUserId)
   fetchPublicPlaylists()
 })
+
+const handleTokenJoin = async (token: string) => {
+  if (!currentUserId) {
+    router.push('/login')
+    return
+  }
+
+  const result = await joinPlaylistByToken(token, currentUserId)
+  if (result.success && result.playlistId) {
+    router.push(`/playlists/${result.playlistId}`)
+  } else {
+    alert(result.message || 'Failed to join playlist via token')
+  }
+}
 </script>
 
 <template>
@@ -60,6 +77,7 @@ onMounted(() => {
           :playlists="discoverPlaylists"
           :is-loading="isLoadingPublic"
           @search="handleSearch"
+          @join-token="handleTokenJoin"
         />
       </section>
     </div>

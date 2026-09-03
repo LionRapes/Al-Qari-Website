@@ -1,13 +1,6 @@
 import { ref, computed } from 'vue'
 import playlistApi from '@/services/playlistApi'
-
-export interface PlaylistSummary {
-  id: string
-  title: string
-  isPublic: boolean
-  role: string
-  ownerId?: string
-}
+import type { PlaylistSummary } from '@/types/ui.types'
 
 export function usePlaylistsLibrary() {
   const ownedPlaylists = ref<PlaylistSummary[]>([])
@@ -33,6 +26,21 @@ export function usePlaylistsLibrary() {
   const isLoadingPersonal = ref(true)
   const isLoadingPublic = ref(true)
   const searchQuery = ref('')
+
+  const joinPlaylistByToken = async (token: string, userId: string) => {
+    try {
+      const res = await playlistApi.joinPlaylist(token)
+      searchQuery.value = ''
+      await fetchPersonalPlaylists(userId)
+      return { success: true, playlistId: res.playlist_id }
+    } catch {
+      console.error('Failed to join via token:')
+      return {
+        success: false,
+        message: 'Invalid or expired invite token',
+      }
+    }
+  }
 
   const fetchPersonalPlaylists = async (userId: string) => {
     isLoadingPersonal.value = true
@@ -114,5 +122,6 @@ export function usePlaylistsLibrary() {
     fetchPersonalPlaylists,
     fetchPublicPlaylists,
     handleSearch,
+    joinPlaylistByToken,
   }
 }

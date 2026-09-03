@@ -50,7 +50,7 @@ onMounted(async () => {
 
       <div v-else-if="errorMessage" class="flex flex-col items-center py-2">
         <div
-          class="w-12 h-12 rounded-full bg-error/10 text-error flex items-center justify-center mb-4"
+          class="w-12 h-12 rounded-full bg-text-red/10 text-text-red flex items-center justify-center mb-4"
         >
           <IconError class="w-6 h-6" />
         </div>

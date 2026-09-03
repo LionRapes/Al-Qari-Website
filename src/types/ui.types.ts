@@ -20,6 +20,14 @@ export interface UnifiedSurah {
   ayahs: UnifiedAyah[]
 }
 
+export interface PlaylistSummary {
+  id: string
+  title: string
+  isPublic: boolean
+  role: string
+  ownerId?: string
+}
+
 // Generic UI element types
 export interface DropdownOption {
   id: string | number

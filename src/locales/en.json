@@ -1,4 +1,8 @@
 {
+  "common": {
+    "back": "Back",
+    "copied": "Copied!"
+  },
   "nav": {
     "home": "Home",
     "quran": "Quran",
@@ -42,13 +46,25 @@
     "discover": {
       "title": "Discover",
       "placeholder": "Search public playlists...",
-      "empty": "No public playlists found."
+      "empty": "No public playlists found.",
+      "tip": "Tip: You can paste a private share token here to join a playlist."
     },
     "section": {
       "ownedTitle": "Owned Playlists",
       "ownedEmpty": "You don't own any playlists yet.",
       "sharedTitle": "Shared With Me",
       "sharedEmpty": "No playlists have been shared with you."
+    },
+    "detail": {
+      "tryAgain": "Try Again",
+      "public": "Public",
+      "private": "Private",
+      "createdBy": "Created by",
+      "emptyData": "This playlist is empty or the data is invalid.",
+      "track": {
+        "reciter": "Reciter",
+        "tafsir": "Tafsir"
+      }
     }
   },
   "profile": {

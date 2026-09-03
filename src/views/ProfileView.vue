@@ -83,7 +83,7 @@ const onFileSelected = async (file: File) => {
         <button
           type="button"
           @click="logout"
-          class="px-6 py-3 rounded-xl border border-error/30 text-error hover:bg-error/10 active:scale-[0.98] transition-all text-sm font-medium flex items-center gap-2 cursor-pointer"
+          class="px-6 py-3 rounded-xl border border-text-red/30 text-text-red hover:bg-text-red/10 active:scale-[0.98] transition-all text-sm font-medium flex items-center gap-2 cursor-pointer"
         >
           <IconExit />
           <span>{{ $t('profile.auth.logout') }}</span>

@@ -1,11 +1,4 @@
-export interface PlaylistItem {
-  surahNumber: number
-  riwayahId: string
-  reciterId: string
-  translationId: string
-  tafsirId: string
-  ayahs: number[]
-}
+import type { PlaylistItem } from '@/types/playlist.types'
 
 export function parsePlaylistString(playlistString: string): PlaylistItem[] {
   if (!playlistString) return []

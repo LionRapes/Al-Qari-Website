@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { PlaylistSummary } from '@/composables/usePlaylistsLibrary'
 import PlaylistCard from '@/components/playlist/PlaylistCard.vue'
+import type { PlaylistSummary } from '@/types/ui.types'
 
 defineProps<{
   title?: string

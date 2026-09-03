@@ -58,7 +58,7 @@ const handleSubmit = async () => {
             class="w-full px-4 py-3 bg-transparent border rounded-xl focus:outline-none transition-colors text-text-base"
             :class="
               emailErrorMessage
-                ? 'border-error ring-1 ring-error'
+                ? 'border-text-red ring-1 ring-text-red'
                 : 'border-border-theme/50 focus:border-primary focus:ring-1 focus:ring-primary'
             "
             :disabled="isLoading"
@@ -67,7 +67,7 @@ const handleSubmit = async () => {
           <transition name="fade">
             <div
               v-if="emailErrorMessage"
-              class="mt-1.5 text-error text-xs flex items-center gap-1.5 px-1"
+              class="mt-1.5 text-text-red text-xs flex items-center gap-1.5 px-1"
             >
               <IconError class="w-4 h-4 shrink-0" />
               <span>{{ emailErrorMessage }}</span>
@@ -75,7 +75,7 @@ const handleSubmit = async () => {
           </transition>
         </div>
 
-        <div v-if="networkError" class="text-error text-sm text-left px-1">
+        <div v-if="networkError" class="text-text-red text-sm text-left px-1">
           {{ $t('login.networkError') }}
         </div>
 

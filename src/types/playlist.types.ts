@@ -26,6 +26,15 @@ export interface ApiUserSharedPlaylist {
   added_at: string
 }
 
+export interface PlaylistItem {
+  surahNumber: number
+  riwayahId: string
+  reciterId: string
+  translationId: string
+  tafsirId: string
+  ayahs: number[]
+}
+
 // --- Response & Payload Types ---
 
 export interface ApiPaginatedPlaylists {

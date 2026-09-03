@@ -111,7 +111,7 @@ defineExpose({
         </button>
       </div>
 
-      <div v-if="localError" class="text-error text-xs flex items-center gap-1 mt-1">
+      <div v-if="localError" class="text-text-red text-xs flex items-center gap-1 mt-1">
         <IconError class="w-3.5 h-3.5 shrink-0" />
         <span>{{ localError }}</span>
       </div>

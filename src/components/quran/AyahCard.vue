@@ -4,6 +4,7 @@ import IconInfo from '../icons/IconInfo.vue'
 import IconCopy from '../icons/IconCopy.vue'
 import IconPlay from '../icons/IconPlay.vue'
 import IconBook from '../icons/IconBook.vue'
+import CopyWidget from '../CopyWidget.vue'
 
 defineProps<{
   ayahNumber: number
@@ -49,13 +50,23 @@ const isTafsirOpen = ref(false)
         </button>
 
         <!-- Delegated Copy Action -->
-        <button
-          @click="$emit('copy', arabicText)"
-          title="Copy Verse"
-          class="p-2 text-text-muted hover:text-primary transition-colors"
+        <CopyWidget
+          :get-text="
+            async () => {
+              return arabicText
+            }
+          "
         >
-          <IconCopy class="w-5 h-5" />
-        </button>
+          <template #default="{ copy }">
+            <button
+              type="button"
+              @click="copy"
+              class="p-1.5 rounded-lg bg-bg-surface-hover text-text-muted hover:text-primary transition-colors"
+            >
+              <IconCopy class="w-3.5 h-3.5" />
+            </button>
+          </template>
+        </CopyWidget>
 
         <!-- Delegated Play Action -->
         <button

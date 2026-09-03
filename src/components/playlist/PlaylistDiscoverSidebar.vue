@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import type { PlaylistSummary } from '@/composables/usePlaylistsLibrary'
 import PlaylistSection from '@/components/playlist/PlaylistSection.vue'
+import type { PlaylistSummary } from '@/types/ui.types'
+import { isUUIDToken } from '@/utils/validators'
+import { ref } from 'vue'
 
 const query = defineModel<string>('searchQuery', { required: true })
+const tokenError = ref('')
 
 defineProps<{
   playlists: PlaylistSummary[]
@@ -11,14 +14,25 @@ defineProps<{
 
 const emit = defineEmits<{
   (e: 'search'): void
+  (e: 'join-token', token: string): void
 }>()
 
 let searchTimeout: ReturnType<typeof setTimeout>
 const onSearchInput = () => {
   clearTimeout(searchTimeout)
+  tokenError.value = ''
   searchTimeout = setTimeout(() => {
     emit('search')
   }, 300)
+}
+
+const onSubmitSearch = () => {
+  const trimmed = query.value.trim()
+  if (isUUIDToken(trimmed)) {
+    emit('join-token', trimmed)
+  } else {
+    emit('search')
+  }
 }
 </script>
 
@@ -26,7 +40,7 @@ const onSearchInput = () => {
   <aside class="sticky top-32 flex flex-col gap-6">
     <div class="bg-bg-surface border border-border-theme rounded-2xl p-6">
       <h2 class="text-lg font-bold text-text-base mb-4">{{ $t('playlist.discover.title') }}</h2>
-      <div class="relative">
+      <form @submit.prevent="onSubmitSearch" class="relative flex flex-col gap-2">
         <input
           v-model="query"
           @input="onSearchInput"
@@ -34,7 +48,10 @@ const onSearchInput = () => {
           :placeholder="$t('playlist.discover.placeholder')"
           class="w-full bg-bg-surface-hover border border-border-theme text-text-base text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-primary transition-colors"
         />
-      </div>
+        <span class="text-[11px] text-text-muted">
+          {{ $t('playlist.discover.tip') }}
+        </span>
+      </form>
     </div>
 
     <PlaylistSection
