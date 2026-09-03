@@ -26,7 +26,8 @@
     "reciter": "Чтец",
     "translation": "Перевод",
     "tafsir": "Тафсир",
-    "riwayah": "Риваят"
+    "riwayah": "Риваят",
+    "createPlaylist": "Создать плейлист"
   },
   "playlist": {
     "guest": {
@@ -64,6 +65,41 @@
       "track": {
         "reciter": "Чтец",
         "tafsir": "Тафсир"
+      }
+    },
+    "editor": {
+      "header": {
+        "editPlaylist": "Редактировать плейлист",
+        "createPlaylist": "Создать плейлист",
+        "saving": "Сохранение...",
+        "savePlaylist": "Сохранить плейлист"
+      },
+      "surahSelector": {
+        "title": "1. Выберите суру"
+      },
+      "ayahSelector": {
+        "title": "2. Выберите аяты",
+        "selected": "(выбрано: {count})",
+        "selectAll": "Выбрать все",
+        "deselectAll": "Снять выделение",
+        "emptyState": "Выберите суру выше, чтобы просмотреть ее аяты."
+      },
+      "settings": {
+        "playlistTitle": "Название плейлиста",
+        "namePlaceholder": "Назовите свой плейлист",
+        "makePublic": "Сделать публичным",
+        "publicDescription": "Разрешить всем находить этот плейлист"
+      },
+      "trackSettings": {
+        "title": "Настройки трека",
+        "addTrack": "Добавить трек в плейлист"
+      },
+      "trackList": {
+        "title": "Треки",
+        "emptyState": "Треки еще не добавлены.",
+        "surah": "Сура",
+        "ayahs": "Аяты",
+        "full": "Полностью"
       }
     }
   },

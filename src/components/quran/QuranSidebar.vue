@@ -31,7 +31,7 @@ const selectedRiwayah = defineModel<DropdownOption | null>('selectedRiwayah')
       <SidebarDropdown
         :title="$t('quran.reciter')"
         :options="dropdownOptions.reciters!"
-        v-model="selectedReciter"
+        v-model="selectedReciter!"
       >
         <template #icon><IconAudio /></template>
       </SidebarDropdown>
@@ -39,7 +39,7 @@ const selectedRiwayah = defineModel<DropdownOption | null>('selectedRiwayah')
       <SidebarDropdown
         :title="$t('quran.translation')"
         :options="dropdownOptions.languages!"
-        v-model="selectedLanguage"
+        v-model="selectedLanguage!"
       >
         <template #icon><IconTranslation /></template>
       </SidebarDropdown>
@@ -47,7 +47,7 @@ const selectedRiwayah = defineModel<DropdownOption | null>('selectedRiwayah')
       <SidebarDropdown
         :title="$t('quran.tafsir')"
         :options="dropdownOptions.tafsirs!"
-        v-model="selectedTafsir"
+        v-model="selectedTafsir!"
       >
         <template #icon><IconBook class="w-6 h-6" /></template>
       </SidebarDropdown>
@@ -55,7 +55,7 @@ const selectedRiwayah = defineModel<DropdownOption | null>('selectedRiwayah')
       <SidebarDropdown
         :title="$t('quran.riwayah')"
         :options="dropdownOptions.riwayahs!"
-        v-model="selectedRiwayah"
+        v-model="selectedRiwayah!"
       >
         <template #icon><IconRiwayah /></template>
       </SidebarDropdown>

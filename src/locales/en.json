@@ -26,7 +26,8 @@
     "reciter": "Reciter",
     "translation": "Translation",
     "tafsir": "Tafsir",
-    "riwayah": "Riwayah"
+    "riwayah": "Riwayah",
+    "createPlaylist": "Create Playlist"
   },
   "playlist": {
     "guest": {
@@ -64,6 +65,41 @@
       "track": {
         "reciter": "Reciter",
         "tafsir": "Tafsir"
+      }
+    },
+    "editor": {
+      "header": {
+        "editPlaylist": "Edit Playlist",
+        "createPlaylist": "Create Playlist",
+        "saving": "Saving...",
+        "savePlaylist": "Save Playlist"
+      },
+      "surahSelector": {
+        "title": "1. Select Surah"
+      },
+      "ayahSelector": {
+        "title": "2. Select Ayahs",
+        "selected": "({count} selected)",
+        "selectAll": "Select All",
+        "deselectAll": "Deselect All",
+        "emptyState": "Select a Surah above to preview its ayahs."
+      },
+      "settings": {
+        "playlistTitle": "Playlist Title",
+        "namePlaceholder": "Name your playlist",
+        "makePublic": "Make Public",
+        "publicDescription": "Allow anyone to discover this playlist"
+      },
+      "trackSettings": {
+        "title": "Track Settings",
+        "addTrack": "Add Track to Playlist"
+      },
+      "trackList": {
+        "title": "Tracks",
+        "emptyState": "No tracks added yet.",
+        "surah": "Surah",
+        "ayahs": "Ayahs",
+        "full": "Full"
       }
     }
   },

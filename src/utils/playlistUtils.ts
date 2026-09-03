@@ -50,3 +50,36 @@ export function parsePlaylistString(playlistString: string): PlaylistItem[] {
 
   return playlistItems
 }
+
+export function encodeAyahArray(ayahs: number[]): string {
+  if (!ayahs || ayahs.length === 0) return ''
+
+  const sorted = [...new Set(ayahs)].sort((a, b) => a - b)
+  const ranges: string[] = []
+  let start = sorted[0]!
+  let prev = sorted[0]!
+
+  for (let i = 1; i <= sorted.length; i++) {
+    if (sorted[i] === prev + 1) {
+      prev = sorted[i]!
+    } else {
+      if (start === prev) {
+        ranges.push(`${start}`)
+      } else {
+        ranges.push(`${start}-${prev}`)
+      }
+      start = sorted[i]!
+      prev = sorted[i]!
+    }
+  }
+  return ranges.join(',')
+}
+
+export function encodePlaylistString(items: PlaylistItem[]): string {
+  return items
+    .map((item) => {
+      const ayahsStr = encodeAyahArray(item.ayahs)
+      return `${item.surahNumber}%${item.riwayahId}$${item.reciterId}@${item.translationId}#${item.tafsirId}:${ayahsStr}`
+    })
+    .join(' | ')
+}

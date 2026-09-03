@@ -30,6 +30,17 @@ const router = createRouter({
       component: () => import('../views/PlaylistDetailView.vue'),
     },
     {
+      path: '/playlists/create',
+      name: 'CreatePlaylist',
+      component: () => import('../views/PlaylistEditorView.vue'),
+    },
+    {
+      path: '/playlists/:id/edit',
+      name: 'EditPlaylist',
+      component: () => import('../views/PlaylistEditorView.vue'),
+      props: true,
+    },
+    {
       path: '/profile',
       name: 'profile',
       component: () => import('../views/ProfileView.vue'),

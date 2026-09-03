@@ -30,7 +30,7 @@ export interface PlaylistSummary {
 
 // Generic UI element types
 export interface DropdownOption {
-  id: string | number
+  id: string
   label: string
 }
 
