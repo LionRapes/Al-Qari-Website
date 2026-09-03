@@ -2,7 +2,7 @@ import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { ApiMetadata, RiwayahMetadata } from '@/types/quran.types'
 import quranApi from '@/services/quranApi'
-import type { AudioCardData, DropdownOption } from '@/types/ui.types'
+import type { SurahCardData, DropdownOption } from '@/types/ui.types'
 
 const metadata = ref<ApiMetadata | null>(null)
 const isLoadingMetadata = ref(true)
@@ -17,7 +17,7 @@ const dropdownOptions = ref({ reciters: [], languages: [], tafsirs: [], riwayahs
   string,
   DropdownOption[]
 >)
-const audioCards = ref<AudioCardData[]>([])
+const surahCards = ref<SurahCardData[]>([])
 
 const lastMappedKey = ref<string>('')
 
@@ -77,7 +77,7 @@ export function useQuranData() {
 
     const currentKey = `${selectedRiwayah.value.id}-${selectedLanguage.value.id}`
 
-    if (lastMappedKey.value === currentKey && audioCards.value.length > 0) {
+    if (lastMappedKey.value === currentKey && surahCards.value.length > 0) {
       return
     }
 
@@ -88,7 +88,7 @@ export function useQuranData() {
         quranApi.getTranslation(`${selectedLanguage.value.id as string}_title`),
       ])
 
-      audioCards.value = riwayahData.map((rSurah) => {
+      surahCards.value = riwayahData.map((rSurah) => {
         const tSurah = transData.find((t) => t.id === rSurah.id)
         return {
           id: rSurah.id,
@@ -155,7 +155,7 @@ export function useQuranData() {
     selectedTafsir,
     selectedRiwayah,
     dropdownOptions,
-    audioCards,
+    surahCards,
     initData,
     getTranscriptionLang,
   }

@@ -9,6 +9,7 @@ const { t } = useI18n()
 const navigation = computed(() => [
   { name: t('nav.home'), path: '/' },
   { name: t('nav.quran'), path: '/quran' },
+  { name: t('nav.playlists'), path: '/playlists' },
 ])
 </script>
 

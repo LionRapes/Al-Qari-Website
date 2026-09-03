@@ -26,7 +26,7 @@ export interface DropdownOption {
   label: string
 }
 
-export interface AudioCardData {
+export interface SurahCardData {
   id: number
   title: string
   subtitle: string

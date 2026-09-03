@@ -3,6 +3,7 @@
     "home": "Home",
     "quran": "Quran",
     "profile": "Profile",
+    "playlists": "Playlists",
     "login": "Log in"
   },
   "home": {
@@ -23,23 +24,59 @@
     "tafsir": "Tafsir",
     "riwayah": "Riwayah"
   },
+  "playlist": {
+    "guest": {
+      "title": "Sign in to use Playlists",
+      "desc": "Log in to build customized Quran study tracks, collaborate on shared recitations, and sync your library across devices.",
+      "button": "Log In or Sign Up"
+    },
+    "card": {
+      "public": "Public",
+      "by": "By {owner}",
+      "role": {
+        "owner": "Owner",
+        "editor": "Editor",
+        "viewer": "Viewer"
+      }
+    },
+    "discover": {
+      "title": "Discover",
+      "placeholder": "Search public playlists...",
+      "empty": "No public playlists found."
+    },
+    "section": {
+      "ownedTitle": "Owned Playlists",
+      "ownedEmpty": "You don't own any playlists yet.",
+      "sharedTitle": "Shared With Me",
+      "sharedEmpty": "No playlists have been shared with you."
+    }
+  },
   "profile": {
-    "title": "Profile",
-    "subtitle": "Manage your account and preferences",
-    "userId": "User ID",
-    "email": "Email",
-    "nickname": "Username",
-    "edit": "Edit",
-    "save": "Save",
-    "cancel": "Cancel",
-    "nicknamePlaceholder": "Enter username",
-    "usernameTaken": "This username is already taken",
-    "updateError": "Failed to update profile",
-    "tier": "Subscription Plan",
-    "active": "Active",
-    "logout": "Log Out",
-    "notLoggedIn": "You are not signed in.",
-    "goToLogin": "Go to Login"
+    "header": {
+      "title": "Profile",
+      "subtitle": "Manage your account and preferences"
+    },
+    "details": {
+      "userId": "User ID",
+      "email": "Email",
+      "active": "Active"
+    },
+    "editor": {
+      "nickname": "Username",
+      "placeholder": "Enter username",
+      "edit": "Edit",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "errors": {
+      "usernameTaken": "This username is already taken",
+      "onlyLatin": "Only Latin letters, numbers, and _ - are allowed"
+    },
+    "auth": {
+      "logout": "Log Out",
+      "notLoggedIn": "You are not signed in.",
+      "goToLogin": "Go to Login"
+    }
   },
   "userTier": {
     "premium": "Premium",

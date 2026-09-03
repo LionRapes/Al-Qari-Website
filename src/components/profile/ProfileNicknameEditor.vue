@@ -42,7 +42,7 @@ const handleSave = () => {
   if (!trimmed) return
 
   if (!validateNickname(trimmed)) {
-    localError.value = t('profile.onlyLatin', 'Допустима только латиница, цифры и _ -')
+    localError.value = t('profile.errors.onlyLatin')
     return
   }
 
@@ -60,7 +60,7 @@ defineExpose({
 <template>
   <div>
     <span class="text-xs uppercase tracking-wider text-text-base/50 font-semibold">
-      {{ $t('profile.nickname') }}
+      {{ $t('profile.editor.nickname') }}
     </span>
 
     <div v-if="!isEditing" class="flex items-center justify-center sm:justify-start gap-2.5 mt-0.5">
@@ -70,7 +70,7 @@ defineExpose({
         @click="startEdit"
         class="text-xs text-primary hover:underline font-medium cursor-pointer"
       >
-        {{ $t('profile.edit') }}
+        {{ $t('profile.editor.edit') }}
       </button>
     </div>
 
@@ -84,7 +84,7 @@ defineExpose({
           type="text"
           v-model="draftNickname"
           @input="draftNickname = draftNickname.replace(/[^a-zA-Z0-9_-]/g, '')"
-          :placeholder="$t('profile.nicknamePlaceholder')"
+          :placeholder="$t('profile.editor.placeholder')"
           maxlength="24"
           class="px-3 py-1.5 text-sm bg-transparent border border-border-theme/60 rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-text-base"
           :disabled="isSaving"
@@ -99,7 +99,7 @@ defineExpose({
             v-if="isSaving"
             class="w-3 h-3 border-2 border-text-base/30 border-t-text-base rounded-full animate-spin"
           ></span>
-          <span>{{ $t('profile.save') }}</span>
+          <span>{{ $t('profile.editor.save') }}</span>
         </button>
         <button
           type="button"
@@ -107,7 +107,7 @@ defineExpose({
           :disabled="isSaving"
           class="px-3 py-1.5 text-xs bg-bg-surface-hover border border-border-theme text-text-base/70 rounded-xl hover:text-text-base active:scale-95 transition-all cursor-pointer"
         >
-          {{ $t('profile.cancel') }}
+          {{ $t('profile.editor.cancel') }}
         </button>
       </div>
 
