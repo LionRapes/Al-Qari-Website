@@ -30,9 +30,9 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div class="min-h-[70vh] flex items-center justify-center px-4">
+  <main class="flex justify-center">
     <div
-      class="max-w-md w-full bg-bg-surface border border-border-theme/30 rounded-2xl shadow-sm p-8 text-center"
+      class="max-w-md w-full h-75 mt-20 bg-bg-surface border border-border-theme/30 rounded-2xl shadow-sm p-8 text-center"
     >
       <h2 class="text-2xl font-bold text-text-base mb-2">{{ $t('login.title') }}</h2>
       <p class="text-sm text-text-base/60 mb-8">{{ $t('login.subtitle') }}</p>
@@ -92,5 +92,5 @@ const handleSubmit = async () => {
         </button>
       </form>
     </div>
-  </div>
+  </main>
 </template>

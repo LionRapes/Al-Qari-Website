@@ -34,7 +34,7 @@ onMounted(() => {
 <template>
   <div
     ref="containerRef"
-    class="flex-1 h-[75vh] lg:h-[calc(100vh-8rem)] max-h-142 overflow-y-auto custom-scrollbar bg-bg-surface border border-border-theme rounded-3xl p-8"
+    class="flex-1 h-[75vh] lg:h-[calc(90vh-8rem)] max-h-142 overflow-y-auto custom-scrollbar bg-bg-surface border border-border-theme rounded-3xl p-8"
   >
     <div v-if="isFetchingNetwork" class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div

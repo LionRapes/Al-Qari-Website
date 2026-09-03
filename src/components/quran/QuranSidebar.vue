@@ -29,6 +29,13 @@ const selectedRiwayah = defineModel<DropdownOption | null>('selectedRiwayah')
 
     <template v-else>
       <SidebarDropdown
+        :title="$t('quran.riwayah')"
+        :options="dropdownOptions.riwayahs!"
+        v-model="selectedRiwayah!"
+      >
+        <template #icon><IconRiwayah /></template>
+      </SidebarDropdown>
+      <SidebarDropdown
         :title="$t('quran.reciter')"
         :options="dropdownOptions.reciters!"
         v-model="selectedReciter!"
@@ -52,13 +59,7 @@ const selectedRiwayah = defineModel<DropdownOption | null>('selectedRiwayah')
         <template #icon><IconBook class="w-6 h-6" /></template>
       </SidebarDropdown>
 
-      <SidebarDropdown
-        :title="$t('quran.riwayah')"
-        :options="dropdownOptions.riwayahs!"
-        v-model="selectedRiwayah!"
-      >
-        <template #icon><IconRiwayah /></template>
-      </SidebarDropdown>
+      <slot />
     </template>
   </aside>
 </template>

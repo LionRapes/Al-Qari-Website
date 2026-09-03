@@ -100,6 +100,12 @@
         "surah": "Surah",
         "ayahs": "Ayahs",
         "full": "Full"
+      },
+      "quickCreate": {
+        "selected": "{count} Selected",
+        "namePlaceholder": "Playlist name...",
+        "saving": "Saving...",
+        "save": "Save Playlist"
       }
     }
   },

@@ -44,6 +44,15 @@ const handlePlayToggle = (surahId: number, title: string) => {
   })
 }
 
+const handleCreatePlaylist = () => {
+  const token = localStorage.getItem('access_token')
+  if (token) {
+    router.push('/playlists/create')
+  } else {
+    router.push('/login')
+  }
+}
+
 onMounted(async () => {
   await initData()
 })
@@ -60,15 +69,6 @@ watch(selectedReciter, (newReciter, oldReciter) => {
 
 <template>
   <main class="max-w-350 mx-auto px-8 mt-6 pb-6">
-    <div class="flex justify-end items-center mb-6">
-      <button
-        @click="router.push('/playlists/create')"
-        class="px-6 py-2.5 text-primary font-bold text-sm rounded-xl hover:bg-primary hover:text-bg-base transition-all cursor-pointer"
-      >
-        {{ $t('quran.createPlaylist') }}
-      </button>
-    </div>
-
     <div class="flex flex-col-reverse lg:flex-row gap-10">
       <QuranSurahGrid
         :audio-cards="surahCards"
@@ -86,7 +86,16 @@ watch(selectedReciter, (newReciter, oldReciter) => {
         v-model:selected-language="selectedLanguage"
         v-model:selected-tafsir="selectedTafsir"
         v-model:selected-riwayah="selectedRiwayah"
-      />
+      >
+        <div class="flex justify-end items-center mb-6">
+          <button
+            @click="handleCreatePlaylist"
+            class="px-6 py-2.5 text-primary font-bold text-sm rounded-xl hover:bg-primary hover:text-bg-base transition-all cursor-pointer"
+          >
+            {{ $t('quran.createPlaylist') }}
+          </button>
+        </div>
+      </QuranSidebar>
     </div>
   </main>
 </template>

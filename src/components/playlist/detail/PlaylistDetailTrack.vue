@@ -64,18 +64,28 @@ const onPlayClicked = (ayahNumber: number) => {
       />
 
       <div class="flex flex-col p-4 gap-4">
-        <AyahCard
+        <div
           v-for="ayah in displayAyahs"
           :key="ayah.number"
-          :ayahNumber="ayah.number"
-          :arabicText="ayah.arabic"
-          :translationText="ayah.translation"
-          :transcriptionText="ayah.transcription"
-          :tafsirText="ayah.tafsir"
-          :isPlaying="activeAyahNumber === ayah.number && isPlaying"
-          @play="onPlayClicked"
-          @copy="handleCopyVerse"
-        />
+          class="transition-colors duration-300 border-l-4"
+          :class="
+            activeAyahNumber === ayah.number
+              ? 'bg-primary/10 border-primary'
+              : 'border-transparent hover:bg-bg-surface-hover'
+          "
+        >
+          <AyahCard
+            :key="ayah.number"
+            :ayahNumber="ayah.number"
+            :arabicText="ayah.arabic"
+            :translationText="ayah.translation"
+            :transcriptionText="ayah.transcription"
+            :tafsirText="ayah.tafsir"
+            :isPlaying="activeAyahNumber === ayah.number && isPlaying"
+            @play="onPlayClicked"
+            @copy="handleCopyVerse"
+          />
+        </div>
       </div>
     </div>
   </div>
