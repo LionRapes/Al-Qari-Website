@@ -43,7 +43,11 @@ const toggleMenu = () => {
 </script>
 
 <template>
-  <header class="relative max-w-350 mx-auto px-8 py-8 flex items-center justify-between z-50">
+  <header class="sticky top-0 max-w-350 mx-auto px-8 py-8 flex items-center justify-between z-50">
+    <div
+      class="absolute inset-0 w-full h-[120%] -z-10 pointer-events-none bg-bg-surface/20 backdrop-blur-md mask-[linear-gradient(to_bottom,black_50%,transparent)] [-webkit-mask-image:linear-gradient(to_bottom,black_50%,transparent)]"
+    ></div>
+
     <div class="flex items-center gap-16">
       <HeaderLogo :is-mobile-menu-open="isMobileMenuOpen" @toggle="toggleMenu" />
 

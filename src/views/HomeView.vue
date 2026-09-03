@@ -5,17 +5,22 @@ import QuoteCard from '@/components/home/QuoteCard.vue'
 import { useRouter } from 'vue-router'
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { ApiQuote, SurahOfDay } from '@/types/index.ts'
+import type { SurahOfDay } from '@/types/ui.types'
+import type { ApiQuote } from '@/types/quran.types'
 import quranApi from '@/services/quranApi'
+import { useLastRead, type LastReadData } from '@/composables/useLastRead'
 
 const router = useRouter()
 const { locale } = useI18n()
+const { getLastRead } = useLastRead()
 
-const lastRead = {
-  surah: 'Al-Baqarah',
-  verse: '2:108',
-  progress: 78,
-}
+const lastRead = ref<LastReadData>({
+  surahId: 1,
+  surahName: 'Al-Fatihah',
+  verseNumber: 1,
+  progress: 0,
+  query: {},
+})
 
 const surahOfTheDay = ref<SurahOfDay>({
   title: '',
@@ -25,7 +30,7 @@ const surahOfTheDay = ref<SurahOfDay>({
 
 const quotes = ref<ApiQuote[]>([])
 
-const loadHomeData = async () => {
+const loadSurahOfTheDayData = async () => {
   try {
     const randomSurahId = Math.floor(Math.random() * 114) + 1
     const data = await quranApi.getSurah('hafs', randomSurahId)
@@ -51,14 +56,20 @@ const loadQuotesData = async () => {
   }
 }
 
+const handleContinueReading = () => {
+  router.push({
+    path: `/quran/${lastRead.value.surahId}`,
+    query: lastRead.value.query,
+  })
+}
+
 onMounted(async () => {
-  await loadHomeData()
+  const savedRead = getLastRead()
+  if (savedRead) lastRead.value = savedRead
+
+  await loadSurahOfTheDayData()
   await loadQuotesData()
 })
-
-const handleContinueReading = () => {
-  router.push('/quran')
-}
 </script>
 
 <template>
@@ -66,8 +77,8 @@ const handleContinueReading = () => {
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-10">
       <WidgetLastRead
         class="lg:col-span-5"
-        :surah="lastRead.surah"
-        :verse="lastRead.verse"
+        :surah="lastRead.surahName"
+        :verse="`${lastRead.surahId}:${lastRead.verseNumber}`"
         :progress="lastRead.progress"
         @continue="handleContinueReading"
       />

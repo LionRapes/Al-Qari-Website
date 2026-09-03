@@ -1,20 +1,59 @@
 <script setup lang="ts">
-import { ref, onMounted, watch, computed } from 'vue'
+import { ref, onMounted, watch, computed, nextTick, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 import { useSurahDetails } from '@/composables/useSurahDetails'
 import { useAudioPlayer } from '@/composables/useAudioPlayer'
 import SurahHeader from '@/components/quran/SurahHeader.vue'
 import AyahCard from '@/components/quran/AyahCard.vue'
+import { useLastRead } from '@/composables/useLastRead'
 
 const route = useRoute()
 const activeAyahNumber = ref<number | null>(null)
 
 const { currentSurah, isLoading, fetchSurah } = useSurahDetails()
 const { activeSurahId, isPlaying, playToggle, exactSeek, currentTime } = useAudioPlayer()
+const { saveLastRead, getLastRead } = useLastRead()
 
 const formattedReciterName = computed(() => {
   const rec = (route.query.reciter as string) || ''
   return rec.replace(/_/g, ' ').replace(' 32k', '')
+})
+
+const ayahElements = ref<HTMLElement[]>([])
+let observer: IntersectionObserver | null = null
+
+const setupScrollObserver = () => {
+  if (observer) observer.disconnect()
+
+  observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const ayahNum = Number((entry.target as HTMLElement).dataset.verse)
+          if (ayahNum) updateLastReadProgress(ayahNum)
+        }
+      })
+    },
+    {
+      rootMargin: '-20% 0px -70% 0px',
+    },
+  )
+
+  ayahElements.value.forEach((el) => {
+    if (el) observer?.observe(el)
+  })
+}
+
+watch(currentSurah, async (newVal) => {
+  if (newVal) {
+    if (!activeAyahNumber.value) updateLastReadProgress(1)
+    await nextTick()
+    setupScrollObserver()
+  }
+})
+
+onBeforeUnmount(() => {
+  if (observer) observer.disconnect()
 })
 
 const handlePlayAyah = async (ayahNumber: number) => {
@@ -38,6 +77,26 @@ const handlePlayAyah = async (ayahNumber: number) => {
   }
   if (!isActiveAyah) exactSeek(ayah.timestamp.start)
   activeAyahNumber.value = ayahNumber
+}
+
+const updateLastReadProgress = (ayahNum: number) => {
+  if (!currentSurah.value) return
+
+  const currentSaved = getLastRead()
+  if (currentSaved && currentSaved.surahId === currentSurah.value.id) {
+    if (ayahNum <= currentSaved.verseNumber) {
+      return
+    }
+  }
+
+  const total = currentSurah.value.versesCount
+  saveLastRead({
+    surahId: currentSurah.value.id,
+    surahName: currentSurah.value.name,
+    verseNumber: ayahNum,
+    progress: Math.round((ayahNum / total) * 100),
+    query: route.query,
+  })
 }
 
 watch(currentTime, (newTime) => {
@@ -95,18 +154,24 @@ watch(() => route.query, loadSurahData, { deep: true })
           />
 
           <div class="flex flex-col">
-            <AyahCard
+            <!-- Scroll Observer Target Wrapper -->
+            <div
               v-for="ayah in currentSurah.ayahs"
               :key="ayah.number"
-              :ayahNumber="ayah.number"
-              :arabicText="ayah.arabic"
-              :translationText="ayah.translation"
-              :transcriptionText="ayah.transcription"
-              :tafsirText="ayah.tafsir"
-              :isPlaying="activeAyahNumber === ayah.number && isPlaying"
-              @play="handlePlayAyah"
-              @copy="handleCopyVerse"
-            />
+              ref="ayahElements"
+              :data-verse="ayah.number"
+            >
+              <AyahCard
+                :ayahNumber="ayah.number"
+                :arabicText="ayah.arabic"
+                :translationText="ayah.translation"
+                :transcriptionText="ayah.transcription"
+                :tafsirText="ayah.tafsir"
+                :isPlaying="activeAyahNumber === ayah.number && isPlaying"
+                @play="handlePlayAyah"
+                @copy="handleCopyVerse"
+              />
+            </div>
           </div>
         </template>
       </div>
