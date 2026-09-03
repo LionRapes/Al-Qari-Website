@@ -1,7 +1,8 @@
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { ApiMetadata, AudioCardData, DropdownOption, RiwayahMetadata } from '@/types/index'
+import type { ApiMetadata, RiwayahMetadata } from '@/types/quran.types'
 import quranApi from '@/services/quranApi'
+import type { AudioCardData, DropdownOption } from '@/types/ui.types'
 
 const metadata = ref<ApiMetadata | null>(null)
 const isLoadingMetadata = ref(true)

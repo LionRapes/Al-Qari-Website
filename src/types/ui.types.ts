@@ -1,0 +1,42 @@
+// Consolidated internal state objects for Frontend UI rendering
+export interface UnifiedAyah {
+  number: number
+  arabic: string
+  translation: string
+  transcription: string
+  tafsir: string
+  timestamp: { start: number; end: number } | null
+  isPlaying: boolean
+}
+
+export interface UnifiedSurah {
+  id: number
+  name: string
+  nameArabic: string
+  revelationType: 'meccan' | 'medinan'
+  versesCount: number
+  showAudhubillah: boolean
+  showBismillah: boolean
+  ayahs: UnifiedAyah[]
+}
+
+// Generic UI element types
+export interface DropdownOption {
+  id: string | number
+  label: string
+}
+
+export interface AudioCardData {
+  id: number
+  title: string
+  subtitle: string
+  desc: string
+  time: string
+  isPlaying: boolean
+}
+
+export interface SurahOfDay {
+  title: string
+  englishText: string
+  arabicText: string
+}

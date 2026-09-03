@@ -1,14 +1,8 @@
-import type { ApiUserProfile, ApiAuthResponse, ApiMessageResponse, IUserApi } from '@/types/index'
+import type { IUserApi, ApiAuthResponse, ApiUserProfile } from '@/types/user.types'
+import type { ApiMessageResponse } from '@/types/common.types'
+import getAuthHeaders from '@/utils/authUtils'
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL
-
-const getAuthHeaders = (): HeadersInit => {
-  const token = localStorage.getItem('access_token')
-  return {
-    'Content-Type': 'application/json',
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  }
-}
 
 const userApi: IUserApi = {
   async requestMagicLink(email: string): Promise<ApiMessageResponse> {

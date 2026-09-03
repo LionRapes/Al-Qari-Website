@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import defaultUserApi from '@/services/userApi'
-import type { IUserApi } from '@/types/index'
+import type { IUserApi } from '@/types/user.types'
 
 export function useMagicLinkAuth(userApi: IUserApi = defaultUserApi) {
   const isLoading = ref(false)

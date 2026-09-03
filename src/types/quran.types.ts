@@ -1,29 +1,10 @@
-// --- API Response Types ---
-
-export interface ApiUserProfile {
-  id: string
-  email: string
-  username: string
-  created_at: string
-  avatar_url: string
-}
-
-export interface ApiAuthResponse {
-  access_token: string
-  token_type: string
-  user_id: string
-  is_new?: boolean
-}
-
-export interface ApiMessageResponse {
-  message: string
-}
-
+// Base structural unit for all Quran text content
 export interface ApiVerse {
   id: number
   text: string
 }
 
+// Full Surah representation including specific reading styles
 export interface ApiRiwayahSurah {
   id: number
   name: string
@@ -32,17 +13,20 @@ export interface ApiRiwayahSurah {
   verses: ApiVerse[]
 }
 
+// Translated or localized Surah content
 export interface ApiTranslationSurah {
   id: number
   name: string
   verses: ApiVerse[]
 }
 
+// Exegesis/Tafsir mapped to verses
 export interface ApiTafsirSurah {
   id: number
   verses: ApiVerse[]
 }
 
+// Word/Verse level audio synchronization metadata
 export interface ApiTimestamp {
   id: number
   verses: {
@@ -52,6 +36,7 @@ export interface ApiTimestamp {
   }[]
 }
 
+// Standalone inspirational or reference texts
 export interface ApiQuote {
   id: number
   title: string
@@ -59,8 +44,7 @@ export interface ApiQuote {
   source: string
 }
 
-// --- Metadata Types ---
-
+// Available Quran editions and reciter configurations
 export interface ApiMetadata {
   tafsirs: string[]
   translations: string[]
@@ -77,59 +61,7 @@ export interface ApiReciter {
   bitrate: string
 }
 
-// Internal
-
-export interface UnifiedAyah {
-  number: number
-  arabic: string
-  translation: string
-  transcription: string
-  tafsir: string
-  timestamp: { start: number; end: number } | null
-  isPlaying: boolean
-}
-
-export interface UnifiedSurah {
-  id: number
-  name: string
-  nameArabic: string
-  revelationType: 'meccan' | 'medinan'
-  versesCount: number
-  showAudhubillah: boolean
-  showBismillah: boolean
-  ayahs: UnifiedAyah[]
-}
-
-export interface DropdownOption {
-  id: string | number
-  label: string
-}
-
-export interface AudioCardData {
-  id: number
-  title: string
-  subtitle: string
-  desc: string
-  time: string
-  isPlaying: boolean
-}
-
-export interface SurahOfDay {
-  title: string
-  englishText: string
-  arabicText: string
-}
-
-// API
-export interface IUserApi {
-  requestMagicLink(email: string): Promise<ApiMessageResponse>
-  verifyMagicLink(token: string): Promise<ApiAuthResponse>
-  getUserProfile(userId: string): Promise<ApiUserProfile>
-  updateUserProfile(userId: string, username: string): Promise<ApiMessageResponse>
-  uploadAvatar(userId: string, file: File): Promise<{ message: string; avatar_url: string }>
-  deleteUser(userId: string): Promise<void>
-}
-
+// Contract for Quran data retrieval requests
 export interface IQuranApi {
   getMetadata(): Promise<ApiMetadata>
   getQuotes(lang: string): Promise<ApiQuote[]>

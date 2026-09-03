@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import defaultUserApi from '@/services/userApi'
-import type { ApiUserProfile, IUserApi } from '@/types/index'
+import type { ApiUserProfile, IUserApi } from '@/types/user.types'
 import { cropAndCompressImage } from '@/utils/imageUtils'
 
 export function useUserProfile(apiService: IUserApi = defaultUserApi) {

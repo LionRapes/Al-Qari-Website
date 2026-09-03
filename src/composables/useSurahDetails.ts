@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import quranApi from '@/services/quranApi'
-import type { UnifiedSurah, UnifiedAyah, ApiVerse, ApiTimestamp } from '@/types/index'
+import type { ApiVerse, ApiTimestamp } from '@/types/quran.types'
+import type { UnifiedSurah, UnifiedAyah } from '@/types/ui.types'
 
 export function useSurahDetails() {
   const currentSurah = ref<UnifiedSurah | null>(null)
