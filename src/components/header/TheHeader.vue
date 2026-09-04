@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import userApi from '@/services/userApi'
 import HeaderLogo from './HeaderLogo.vue'
 import DesktopNav from './DesktopNav.vue'
 import MobileNav from './MobileNav.vue'
 import UserProfile from './UserProfile.vue'
 import { useI18n } from 'vue-i18n'
+import { offEvent, onEvent } from '@/utils/eventUtils.ts'
 
 defineProps<{
   navigation: { name: string; path: string }[]
@@ -17,8 +18,9 @@ const userName = ref('')
 const avatarUrl = ref('')
 const userTier = ref('')
 
-onMounted(async () => {
-  const { t } = useI18n()
+const { t } = useI18n()
+
+const loadProfile = async () => {
   const userId = localStorage.getItem('user_id')
   const token = localStorage.getItem('access_token')
 
@@ -34,6 +36,15 @@ onMounted(async () => {
       isLoggedIn.value = false
     }
   }
+}
+
+onMounted(() => {
+  loadProfile()
+  onEvent('USER_PROFILE_UPDATED', loadProfile)
+})
+
+onUnmounted(() => {
+  offEvent('USER_PROFILE_UPDATED', loadProfile)
 })
 
 // [[HEADER-toggleMenu|Close/Open mobile nav menu]]

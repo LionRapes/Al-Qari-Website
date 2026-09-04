@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 import { useSurahDetails } from '@/composables/useSurahDetails'
 import { useAyahPlayback } from '@/composables/useAyahPlayback'
 import AyahCard from '@/components/quran/AyahCard.vue'
@@ -10,18 +10,7 @@ const props = defineProps<{
   track: PlaylistItem
 }>()
 
-const { currentSurah, isLoading, fetchSurah } = useSurahDetails()
-
-onMounted(() => {
-  fetchSurah(
-    props.track.surahNumber,
-    props.track.riwayahId,
-    props.track.translationId,
-    props.track.tafsirId,
-    props.track.translationId,
-    props.track.reciterId,
-  )
-})
+const { currentSurah, isLoading, initSurah } = useSurahDetails()
 
 const displayAyahs = computed(() => {
   if (!currentSurah.value) return []
@@ -30,7 +19,7 @@ const displayAyahs = computed(() => {
   return currentSurah.value.ayahs.filter((a) => requestedAyahs.includes(a.number))
 })
 
-const { activeAyahNumber, isPlaying, handlePlayAyah, handleCopyVerse } = useAyahPlayback(
+const { activeAyahNumber, isPlaying, handlePlayAyah, clear } = useAyahPlayback(
   currentSurah,
   displayAyahs,
 )
@@ -45,6 +34,21 @@ const onPlayClicked = (ayahNumber: number) => {
     reciterName: props.track.reciterId.replace(/_/g, ' '),
   })
 }
+
+onMounted(async () => {
+  await initSurah(
+    props.track.surahNumber,
+    props.track.translationId,
+    props.track.riwayahId,
+    props.track.tafsirId,
+    props.track.translationId,
+    props.track.reciterId,
+  )
+})
+
+onUnmounted(() => {
+  clear()
+})
 </script>
 
 <template>
@@ -67,12 +71,12 @@ const onPlayClicked = (ayahNumber: number) => {
         <div
           v-for="ayah in displayAyahs"
           :key="ayah.number"
-          class="transition-colors duration-300 border-l-4"
-          :class="
+          class="transition-colors duration-300 border-l-4 relative"
+          :class="[
             activeAyahNumber === ayah.number
               ? 'bg-primary/10 border-primary'
-              : 'border-transparent hover:bg-bg-surface-hover'
-          "
+              : 'border-transparent hover:bg-bg-surface-hover',
+          ]"
         >
           <AyahCard
             :key="ayah.number"
@@ -83,7 +87,6 @@ const onPlayClicked = (ayahNumber: number) => {
             :tafsirText="ayah.tafsir"
             :isPlaying="activeAyahNumber === ayah.number && isPlaying"
             @play="onPlayClicked"
-            @copy="handleCopyVerse"
           />
         </div>
       </div>

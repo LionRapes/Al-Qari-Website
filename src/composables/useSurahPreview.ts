@@ -9,14 +9,14 @@ interface PreviewDependencies {
 }
 
 export function useSurahPreview(
-  fetchSurah: (
+  initSurah: (
     surahId: number,
-    riwayahId: string,
-    languageId: string,
-    tafsirId: string,
-    translationLanguageId: string,
-    reciterId: string,
-  ) => void,
+    language: string,
+    riwayah: string,
+    tafsir: string,
+    transcriptionLang: string,
+    reciter: string,
+  ) => Promise<void>,
   deps: PreviewDependencies,
   onSurahChange: () => void,
 ) {
@@ -25,10 +25,10 @@ export function useSurahPreview(
   const loadSurahPreview = () => {
     if (!selectedPreviewSurahId.value) return
 
-    fetchSurah(
+    initSurah(
       selectedPreviewSurahId.value,
-      deps.selectedRiwayah.value?.id || 'hafs',
       deps.selectedLanguage.value?.id || 'en',
+      deps.selectedRiwayah.value?.id || 'hafs',
       deps.selectedTafsir.value?.id || '',
       deps.selectedLanguage.value?.id || 'en',
       deps.selectedReciter.value?.id || '',

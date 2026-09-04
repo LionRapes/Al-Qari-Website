@@ -19,7 +19,7 @@ const navigation = computed(() => [
 
     <div class="grid w-full">
       <router-view v-slot="{ Component }">
-        <transition name="fade" mode="default">
+        <transition name="fade" mode="out-in">
           <component :is="Component" class="col-start-1 row-start-1 w-full" />
         </transition>
       </router-view>

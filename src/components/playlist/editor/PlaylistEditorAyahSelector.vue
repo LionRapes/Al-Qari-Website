@@ -1,19 +1,49 @@
 <script setup lang="ts">
+import { computed, watch } from 'vue'
 import IconCheck from '@/components/icons/IconCheck.vue'
 import AyahCard from '@/components/quran/AyahCard.vue'
-import type { UnifiedSurah } from '@/types/ui.types'
+import { useAyahPlayback } from '@/composables/useAyahPlayback'
+import type { DropdownOption, UnifiedSurah } from '@/types/ui.types'
 
-defineProps<{
+const props = defineProps<{
   currentSurah: UnifiedSurah | null
   isLoading: boolean
   selectedPreviewSurahId: number | null
   selectedAyahs: number[]
+  selectedRiwayah?: DropdownOption | null
+  selectedReciter?: DropdownOption | null
 }>()
 
 defineEmits<{
   (e: 'toggle-ayah', number: number): void
   (e: 'toggle-all'): void
 }>()
+
+const surahRef = computed(() => props.currentSurah)
+const ayahsRef = computed(() => props.currentSurah?.ayahs || [])
+
+const { activeAyahNumber, isPlaying, handlePlayAyah, clear } = useAyahPlayback(surahRef, ayahsRef)
+
+watch(
+  () => props.currentSurah?.id,
+  (newId, oldId) => {
+    if (newId !== oldId && newId !== undefined) {
+      clear()
+    }
+  },
+)
+
+const onPlayClicked = (ayahNumber: number) => {
+  if (!props.currentSurah) return
+
+  handlePlayAyah(ayahNumber, {
+    surahId: props.currentSurah.id,
+    surahName: props.currentSurah.name,
+    riwayahId: props.selectedRiwayah?.id || 'hafs',
+    reciterId: props.selectedReciter?.id || 'abdur_rashid_sufi_qdc_64k',
+    reciterName: props.selectedReciter?.label || 'Abdur Rashid Sufi',
+  })
+}
 </script>
 
 <template>
@@ -49,18 +79,20 @@ defineEmits<{
       >
         {{ $t('playlist.editor.ayahSelector.emptyState') }}
       </div>
+
       <div v-else-if="isLoading" class="absolute inset-0 flex items-center justify-center">
         <div
           class="w-8 h-8 border-4 border-primary/20 border-t-primary rounded-full animate-spin"
         ></div>
       </div>
+
       <div v-else-if="currentSurah" class="flex flex-col p-2">
         <div
           v-for="ayah in currentSurah.ayahs"
           :key="ayah.number"
           class="relative group rounded-2xl overflow-hidden transition-colors"
           :class="
-            selectedAyahs.includes(ayah.number)
+            selectedAyahs.includes(ayah.number) || activeAyahNumber === ayah.number
               ? 'bg-primary/5 border border-primary/30'
               : 'hover:bg-bg-surface-hover'
           "
@@ -76,13 +108,17 @@ defineEmits<{
           >
             <IconCheck />
           </button>
-          <div class="pl-12 pointer-events-none">
+
+          <div class="pl-12">
+            <!-- 4. Bind playback state and events to AyahCard -->
             <AyahCard
               :ayahNumber="ayah.number"
               :arabicText="ayah.arabic"
               :translationText="ayah.translation"
               :transcriptionText="ayah.transcription"
               :tafsirText="ayah.tafsir"
+              :isPlaying="activeAyahNumber === ayah.number && isPlaying"
+              @play="onPlayClicked"
             />
           </div>
         </div>

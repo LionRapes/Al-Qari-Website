@@ -18,7 +18,7 @@ const selectedRiwayah = defineModel<DropdownOption | null>('selectedRiwayah')
 </script>
 
 <template>
-  <aside class="w-full lg:w-80 shrink-0 flex flex-col">
+  <aside class="w-full lg:min-w-40 shrink-0 flex flex-col">
     <div v-if="isLoadingMetadata" class="animate-pulse flex flex-col gap-4">
       <div
         v-for="i in 4"

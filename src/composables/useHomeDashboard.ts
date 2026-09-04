@@ -4,6 +4,7 @@ import { useLastRead, type LastReadData } from '@/composables/useLastRead'
 import quranApi from '@/services/quranApi'
 import type { SurahOfDay } from '@/types/ui.types'
 import type { ApiQuote } from '@/types/quran.types'
+import { cacheService } from '@/services/cacheService'
 
 export function useHomeDashboard() {
   const { locale } = useI18n()
@@ -27,14 +28,25 @@ export function useHomeDashboard() {
 
   const loadSurahOfTheDayData = async () => {
     try {
-      const randomSurahId = Math.floor(Math.random() * 114) + 1
-      const data = await quranApi.getSurah('hafs', randomSurahId)
-      const dataTranslated = await quranApi.getTranslatedSurah(locale.value, randomSurahId)
+      const cached = await cacheService.getOrSet(
+        'surahOfTheDay',
+        async () => {
+          const randomSurahId = Math.floor(Math.random() * 114) + 1
+          const data = await quranApi.getSurah('hafs', randomSurahId)
+          const dataTranslated = await quranApi.getTranslatedSurah(locale.value, randomSurahId)
+          return {
+            data,
+            dataTranslated,
+            randomSurahId,
+          }
+        },
+        24 * 60 * 60 * 1000,
+      )
 
       surahOfTheDay.value = {
-        title: `${dataTranslated.name || data.name} (${randomSurahId})`,
-        englishText: dataTranslated.verses[0]?.text || 'Read and explore this Surah.',
-        arabicText: data.name,
+        title: `${cached.dataTranslated.name || cached.data.name} (${cached.randomSurahId})`,
+        englishText: cached.dataTranslated.verses[0]?.text || '',
+        arabicText: cached.data.name,
       }
     } catch (error) {
       console.error('Failed to load Surah of the Day:', error)

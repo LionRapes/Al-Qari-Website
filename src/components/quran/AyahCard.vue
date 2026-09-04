@@ -37,8 +37,9 @@ const isTafsirOpen = ref(false)
 
       <!-- Interactive Controls -->
       <div
-        class="flex items-center gap-1 md:gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
+        class="flex items-center gap-1 md:gap-2 lg:opacity-0 md:group-hover:opacity-100 transition-opacity"
       >
+        <slot />
         <!-- Tafsir Toggle -->
         <button
           @click="isTafsirOpen = !isTafsirOpen"

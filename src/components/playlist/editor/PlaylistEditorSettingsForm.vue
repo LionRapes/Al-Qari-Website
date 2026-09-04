@@ -20,8 +20,9 @@ defineEmits<{
       </label>
       <input
         :value="title"
-        @input="$emit('update:title', ($event.target as HTMLInputElement).value)"
+        @input="$emit('update:title', ($event.target as HTMLInputElement).value.slice(0, 32))"
         type="text"
+        maxlength="32"
         :placeholder="$t('playlist.editor.settings.namePlaceholder')"
         class="w-full bg-bg-surface-hover border border-border-theme rounded-xl px-4 py-3 text-text-base focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors"
       />

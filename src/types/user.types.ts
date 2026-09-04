@@ -19,7 +19,7 @@ export interface ApiAuthResponse {
 
 // Contract for User-related network requests
 export interface IUserApi {
-  requestMagicLink(email: string): Promise<ApiMessageResponse>
+  requestMagicLink(email: string, lang: string): Promise<ApiMessageResponse>
   verifyMagicLink(token: string): Promise<ApiAuthResponse>
   getUserProfile(userId: string): Promise<ApiUserProfile>
   updateUserProfile(userId: string, username: string): Promise<ApiMessageResponse>

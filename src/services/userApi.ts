@@ -1,17 +1,24 @@
 import type { IUserApi, ApiAuthResponse, ApiUserProfile } from '@/types/user.types'
 import type { ApiMessageResponse } from '@/types/common.types'
-import getAuthHeaders from '@/utils/authUtils'
+import { getAuthHeaders, handleApiError } from '@/utils/authUtils'
+import { cacheService } from './cacheService'
+import { emitEvent } from '@/utils/eventUtils'
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL
 
 const userApi: IUserApi = {
-  async requestMagicLink(email: string): Promise<ApiMessageResponse> {
+  async getUserProfile(userId: string): Promise<ApiUserProfile> {
+    return cacheService.fetchCached(`${API_BASE}/users/${userId}`, 5 * 60 * 1000)
+  },
+
+  async requestMagicLink(email: string, lang: string): Promise<ApiMessageResponse> {
     const res = await fetch(`${API_BASE}/users/auth/magic-link`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email, lang }),
     })
-    if (!res.ok) throw new Error('Failed to request magic link')
+
+    handleApiError(res, 'Failed to request magic link')
     return res.json()
   },
 
@@ -21,21 +28,8 @@ const userApi: IUserApi = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token }),
     })
-    if (!res.ok) throw new Error('Invalid or expired token')
-    return res.json()
-  },
 
-  async getUserProfile(userId: string): Promise<ApiUserProfile> {
-    const res = await fetch(`${API_BASE}/users/${userId}`, {
-      headers: getAuthHeaders(),
-    })
-    if (!res.ok) {
-      if (res.status === 401) {
-        localStorage.removeItem('access_token')
-        localStorage.removeItem('user_id')
-      }
-      throw new Error('Failed to fetch user profile')
-    }
+    handleApiError(res, 'Invalid or expired token')
     return res.json()
   },
 
@@ -45,7 +39,15 @@ const userApi: IUserApi = {
       headers: getAuthHeaders(),
       body: JSON.stringify({ username }),
     })
-    if (!res.ok) throw new Error('Failed to update profile')
+
+    handleApiError(res, 'Failed to update profile')
+
+    await cacheService.updateCache<ApiUserProfile>(`${API_BASE}/users/${userId}`, (profile) => ({
+      ...profile,
+      username,
+    }))
+    emitEvent('USER_PROFILE_UPDATED')
+
     return res.json()
   },
 
@@ -53,23 +55,22 @@ const userApi: IUserApi = {
     const formData = new FormData()
     formData.append('file', file)
 
-    const token = localStorage.getItem('access_token')
-    const headers: HeadersInit = token ? { Authorization: `Bearer ${token}` } : {}
-
     const res = await fetch(`${API_BASE}/users/${userId}/avatar`, {
       method: 'POST',
-      headers,
+      headers: getAuthHeaders(true),
       body: formData,
     })
 
-    if (!res.ok) {
-      if (res.status === 401) {
-        localStorage.removeItem('access_token')
-        localStorage.removeItem('user_id')
-      }
-      throw new Error('Failed to upload avatar')
-    }
-    return res.json()
+    handleApiError(res, 'Failed to upload avatar')
+
+    const responseData = await res.json()
+    await cacheService.updateCache<ApiUserProfile>(`${API_BASE}/users/${userId}`, (profile) => ({
+      ...profile,
+      avatar_url: responseData.avatar_url,
+    }))
+    emitEvent('USER_PROFILE_UPDATED')
+
+    return responseData
   },
 
   async deleteUser(userId: string): Promise<void> {
@@ -77,7 +78,8 @@ const userApi: IUserApi = {
       method: 'DELETE',
       headers: getAuthHeaders(),
     })
-    if (!res.ok) throw new Error('Failed to delete user')
+
+    handleApiError(res, 'Failed to delete user')
   },
 }
 

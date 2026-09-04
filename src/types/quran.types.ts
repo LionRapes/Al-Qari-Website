@@ -61,7 +61,6 @@ export interface ApiReciter {
   bitrate: string
 }
 
-// Contract for Quran data retrieval requests
 export interface IQuranApi {
   getMetadata(): Promise<ApiMetadata>
   getQuotes(lang: string): Promise<ApiQuote[]>
@@ -70,6 +69,7 @@ export interface IQuranApi {
   getTranslation(langId: string): Promise<ApiTranslationSurah[]>
   getTranslatedSurah(langId: string, surahId: number): Promise<ApiTranslationSurah>
   getTafsirSurah(tafsirId: string, surahId: number): Promise<ApiTafsirSurah>
+  getTranscription(riwayahId: string, langId: string): Promise<ApiTranslationSurah[]>
   getTranscriptionSurah(
     riwayahId: string,
     langId: string,

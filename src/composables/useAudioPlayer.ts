@@ -46,6 +46,10 @@ export function useAudioPlayer() {
     reciterId?: string,
     meta?: { title: string; reciter: string },
   ) => {
+    if (surahId === -1) {
+      audio.pause()
+      return
+    }
     const isSurahChanged = activeSurahId.value !== surahId
     if (!isSurahChanged && activeReciterId.value === reciterId) {
       if (isPlaying.value) audio.pause()

@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import type { ApiPlaylist } from '@/types/playlist.types'
-import type { ApiUserProfile } from '@/types/user.types'
+import type { PlaylistSummary } from '@/types/ui.types'
 
 defineProps<{
-  playlist: ApiPlaylist
-  owner: ApiUserProfile | null
+  playlist: PlaylistSummary
 }>()
 </script>
 
@@ -17,33 +15,33 @@ defineProps<{
       <span
         class="px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-lg border whitespace-nowrap shrink-0"
         :class="
-          playlist.is_public
+          playlist.isPublic
             ? 'bg-text-green/10 text-text-green border-text-green/20'
             : 'bg-text-muted/10 text-text-mborder-text-muted border-text-muted/20'
         "
       >
-        {{ playlist.is_public ? $t('playlist.detail.public') : $t('playlist.detail.private') }}
+        {{ playlist.isPublic ? $t('playlist.detail.public') : $t('playlist.detail.private') }}
       </span>
     </div>
 
-    <div v-if="owner" class="flex items-center gap-3">
+    <div v-if="playlist.owner" class="flex items-center gap-3">
       <div
         class="w-8 h-8 rounded-full overflow-hidden bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0"
       >
         <img
-          v-if="owner.avatar_url"
-          :src="owner.avatar_url"
-          alt="Owner Avatar"
+          v-if="playlist.owner.avatar_url"
+          :src="playlist.owner.avatar_url"
+          alt="playlist.Owner Avatar"
           class="w-full h-full object-cover"
         />
         <span v-else class="text-primary text-xs font-bold uppercase">
-          {{ (owner.username || owner.email || 'U').charAt(0) }}
+          {{ (playlist.owner.username || playlist.owner.id || 'U').charAt(0) }}
         </span>
       </div>
       <p class="text-sm text-text-muted flex items-center gap-1">
         {{ $t('playlist.detail.createdBy') }}
         <span class="font-medium text-text-base">
-          {{ owner.username || owner.email || playlist.owner_id }}
+          {{ playlist.owner.username || playlist.owner.id }}
         </span>
       </p>
     </div>

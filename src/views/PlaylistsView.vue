@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import { usePlaylistsLibrary } from '@/composables/usePlaylistsLibrary'
 import PlaylistSection from '@/components/playlist/PlaylistSection.vue'
 import PlaylistAuthBanner from '@/components/playlist/PlaylistAuthBanner.vue'
 import PlaylistDiscoverSidebar from '@/components/playlist/PlaylistDiscoverSidebar.vue'
 import { useRouter } from 'vue-router'
+import { getAuth } from '@/utils/authUtils'
+import { offEvent, onEvent } from '@/utils/eventUtils'
 
 const router = useRouter()
-const currentUserId = localStorage.getItem('user_id') || ''
+const auth = getAuth()
 
 const {
   ownedPlaylists,
@@ -22,24 +24,33 @@ const {
   joinPlaylistByToken,
 } = usePlaylistsLibrary()
 
-onMounted(() => {
-  if (currentUserId) fetchPersonalPlaylists(currentUserId)
-  fetchPublicPlaylists()
-})
-
 const handleTokenJoin = async (token: string) => {
-  if (!currentUserId) {
+  if (!auth) {
     router.push('/login')
     return
   }
 
-  const result = await joinPlaylistByToken(token, currentUserId)
+  const result = await joinPlaylistByToken(token, auth.userId)
   if (result.success && result.playlistId) {
     router.push(`/playlists/${result.playlistId}`)
   } else {
     alert(result.message || 'Failed to join playlist via token')
   }
 }
+
+const updatePlaylists = () => {
+  if (auth) fetchPersonalPlaylists(auth.userId)
+}
+
+onMounted(() => {
+  onEvent('PLAYLIST_UPDATED', updatePlaylists)
+  updatePlaylists()
+  fetchPublicPlaylists()
+})
+
+onUnmounted(() => {
+  offEvent('PLAYLIST_UPDATED', updatePlaylists)
+})
 </script>
 
 <template>
@@ -47,7 +58,7 @@ const handleTokenJoin = async (token: string) => {
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
       <!-- LEFT COLUMN: Personal Library or Auth Banner -->
       <section class="lg:col-span-8 flex flex-col gap-8">
-        <PlaylistAuthBanner v-if="!currentUserId" />
+        <PlaylistAuthBanner v-if="!auth" />
 
         <template v-else>
           <PlaylistSection

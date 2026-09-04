@@ -14,7 +14,8 @@ export function useAyahPlayback(
   currentSurah: Ref<UnifiedSurah | null>,
   displayAyahs: Ref<UnifiedAyah[]>,
 ) {
-  const { activeSurahId, isPlaying, playToggle, exactSeek, currentTime } = useAudioPlayer()
+  const { activeSurahId, activeReciterId, isPlaying, playToggle, exactSeek, currentTime } =
+    useAudioPlayer()
   const activeAyahNumber = ref<number | null>(null)
 
   watch(currentTime, (newTime) => {
@@ -73,12 +74,15 @@ export function useAyahPlayback(
     activeAyahNumber.value = ayahNumber
   }
 
-  const handleCopyVerse = (text: string) => navigator.clipboard.writeText(text)
-
+  const clear = () => {
+    playToggle(-1)
+    activeReciterId.value = null
+    activeSurahId.value = null
+  }
   return {
     activeAyahNumber,
     isPlaying,
     handlePlayAyah,
-    handleCopyVerse,
+    clear,
   }
 }

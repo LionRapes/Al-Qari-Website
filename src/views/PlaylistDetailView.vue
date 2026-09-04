@@ -14,7 +14,17 @@ const router = useRouter()
 
 const playlistId = route.params.id as string
 
-const { playlist, owner, tracks, isLoading, error, fetchPlaylist } = usePlaylistDetail()
+const { playlist, tracks, isLoading, error, fetchPlaylist } = usePlaylistDetail()
+
+const handleBack = () => {
+  const previousPath = window.history.state?.back
+
+  if (typeof previousPath === 'string' && previousPath.endsWith('/edit')) {
+    router.push('/playlists')
+  } else {
+    router.back()
+  }
+}
 
 onMounted(() => {
   if (playlistId) {
@@ -26,7 +36,7 @@ onMounted(() => {
 <template>
   <main class="max-w-3xl mx-auto px-6 mt-8 pb-12">
     <button
-      @click="router.back()"
+      @click="handleBack"
       class="mb-6 flex items-center gap-2 text-sm font-medium text-text-muted hover:text-primary transition-colors cursor-pointer"
     >
       <IconBack />
@@ -38,7 +48,7 @@ onMounted(() => {
     <PlaylistDetailError v-else-if="error" :error="error" @retry="fetchPlaylist(playlistId)" />
 
     <div v-else-if="playlist">
-      <PlaylistDetailHeader :playlist="playlist" :owner="owner" />
+      <PlaylistDetailHeader :playlist="playlist" />
 
       <section class="flex flex-col gap-6">
         <div

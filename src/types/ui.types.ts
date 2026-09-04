@@ -24,8 +24,13 @@ export interface PlaylistSummary {
   id: string
   title: string
   isPublic: boolean
-  role: string
-  ownerId?: string
+  role?: string
+  data?: string
+  owner?: {
+    id: string
+    username: string
+    avatar_url: string
+  }
 }
 
 // Generic UI element types

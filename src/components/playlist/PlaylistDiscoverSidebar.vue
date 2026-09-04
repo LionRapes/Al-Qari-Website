@@ -21,6 +21,10 @@ let searchTimeout: ReturnType<typeof setTimeout>
 const onSearchInput = () => {
   clearTimeout(searchTimeout)
   tokenError.value = ''
+
+  const words = query.value.trim().split(/\s+/)
+  if (words.length > 10) query.value = words.slice(0, 10).join(' ')
+
   searchTimeout = setTimeout(() => {
     emit('search')
   }, 300)

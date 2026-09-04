@@ -15,10 +15,8 @@ export function usePlaylistsLibrary() {
   })
 
   const discoverPlaylists = computed(() => {
-    const currentUserId = localStorage.getItem('user_id') || ''
     return publicPlaylists.value.filter((p) => {
       if (personalPlaylistIds.value.has(p.id)) return false
-      if (currentUserId && p.ownerId === currentUserId) return false
       return true
     })
   })
@@ -55,6 +53,7 @@ export function usePlaylistsLibrary() {
         title: p.title,
         isPublic: p.is_public,
         role: 'owner',
+        owner: p.owner,
       }))
 
       sharedPlaylists.value = sharedRes.playlists.map((p) => ({
@@ -62,6 +61,7 @@ export function usePlaylistsLibrary() {
         title: p.title,
         isPublic: p.is_public,
         role: p.role,
+        owner: p.owner,
       }))
     } catch (error) {
       console.error('Failed to load personal playlists:', error)
@@ -102,7 +102,6 @@ export function usePlaylistsLibrary() {
         title: p.title,
         isPublic: p.is_public,
         role: 'viewer',
-        ownerId: p.owner_id,
       }))
     } catch (error) {
       console.error('Search failed:', error)

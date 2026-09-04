@@ -1,7 +1,10 @@
 {
   "common": {
     "back": "Back",
-    "copied": "Copied!"
+    "copied": "Copied!",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "confirm": "Confirm"
   },
   "nav": {
     "home": "Home",
@@ -42,6 +45,10 @@
         "owner": "Owner",
         "editor": "Editor",
         "viewer": "Viewer"
+      },
+      "delete": {
+        "title": "Delete Playlist",
+        "message": "Are you sure you want to delete this playlist? This action cannot be undone."
       }
     },
     "discover": {

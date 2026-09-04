@@ -28,6 +28,6 @@ defineEmits<{
       <!-- Mobile Close Icon (X) -->
       <IconClose v-else class="block md:hidden w-6 h-6 text-primary" />
     </button>
-    Al-Qari
+    <RouterLink to="/" class="hover:opacity-85 transition-opacity"> Al-Qari </RouterLink>
   </div>
 </template>

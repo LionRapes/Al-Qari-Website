@@ -72,6 +72,19 @@ export function useQuranData() {
     }
   }
 
+  const prefetchFullData = () => {
+    if (!selectedRiwayah.value || !selectedLanguage.value) return
+
+    const riwayahId = selectedRiwayah.value.id as string
+    const langId = selectedLanguage.value.id as string
+
+    Promise.all([
+      quranApi.getRiwayah(riwayahId),
+      quranApi.getTranslation(langId),
+      quranApi.getTranscription(riwayahId, langId),
+    ]).catch((error) => console.warn('Background prefetch failed:', error))
+  }
+
   const loadSurahs = async () => {
     if (!selectedRiwayah.value || !selectedLanguage.value) return
 
@@ -81,11 +94,13 @@ export function useQuranData() {
       return
     }
 
+    const riwayahId = selectedRiwayah.value.id as string
+    const langId = selectedLanguage.value.id as string
     isFetchingNetwork.value = true
     try {
       const [riwayahData, transData] = await Promise.all([
-        quranApi.getRiwayah(`${selectedRiwayah.value.id as string}_title`),
-        quranApi.getTranslation(`${selectedLanguage.value.id as string}_title`),
+        quranApi.getRiwayah(`${riwayahId}_title`),
+        quranApi.getTranslation(`${langId}_title`),
       ])
 
       surahCards.value = riwayahData.map((rSurah) => {
@@ -101,6 +116,7 @@ export function useQuranData() {
       })
 
       lastMappedKey.value = currentKey
+      prefetchFullData()
     } catch (error) {
       console.error('Failed to load Surahs in background:', error)
     } finally {

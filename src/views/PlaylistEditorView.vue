@@ -31,14 +31,14 @@ const {
 
 const { title, isPublic, tracks, isSaving, addTrack, removeTrack, savePlaylist } =
   usePlaylistEditor(playlistId)
-const { currentSurah, isLoading: isSurahLoading, fetchSurah } = useSurahDetails()
+const { currentSurah, isLoading: isSurahLoading, initSurah } = useSurahDetails()
 
 const versesCount = computed(() => currentSurah.value?.versesCount)
 const { selectedAyahs, toggleAyah, toggleAllAyahs, clearSelection, formattedAyahRange } =
   useAyahSelection(versesCount)
 
 const { selectedPreviewSurahId, clearPreview } = useSurahPreview(
-  fetchSurah,
+  initSurah,
   { selectedRiwayah, selectedLanguage, selectedTafsir, selectedReciter },
   clearSelection,
 )
@@ -88,13 +88,15 @@ const handleAddTrack = () => {
           :is-loading="isSurahLoading"
           :selected-preview-surah-id="selectedPreviewSurahId"
           :selected-ayahs="selectedAyahs"
+          :selected-riwayah="selectedRiwayah"
+          :selected-reciter="selectedReciter"
           @toggle-ayah="toggleAyah"
           @toggle-all="toggleAllAyahs"
         />
       </section>
 
       <!-- RIGHT COLUMN -->
-      <aside class="lg:col-span-4 h-full overflow-y-auto custom-scrollbar pr-2">
+      <aside class="lg:col-span-4 h-full overflow-y-auto custom-scrollbar pr-2 overflow-x-hidden">
         <div class="flex flex-col gap-6">
           <PlaylistEditorSettingsForm v-model:title="title" v-model:is-public="isPublic" />
 

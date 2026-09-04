@@ -80,6 +80,7 @@ watch(selectedReciter, (newReciter, oldReciter) => {
       />
 
       <QuranSidebar
+        class="lg:w-80"
         :is-loading-metadata="isLoadingMetadata"
         :dropdown-options="dropdownOptions"
         v-model:selected-reciter="selectedReciter"

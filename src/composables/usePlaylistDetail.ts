@@ -1,13 +1,10 @@
 import { ref, computed } from 'vue'
 import playlistApi from '@/services/playlistApi'
-import userApi from '@/services/userApi'
-import type { ApiPlaylist } from '@/types/playlist.types'
-import type { ApiUserProfile } from '@/types/user.types'
 import { parsePlaylistString } from '@/utils/playlistUtils'
+import type { PlaylistSummary } from '@/types/ui.types'
 
 export function usePlaylistDetail() {
-  const playlist = ref<ApiPlaylist | null>(null)
-  const owner = ref<ApiUserProfile | null>(null)
+  const playlist = ref<PlaylistSummary | null>(null)
   const isLoading = ref(true)
   const error = ref('')
 
@@ -21,9 +18,13 @@ export function usePlaylistDetail() {
     error.value = ''
     try {
       const data = await playlistApi.getPlaylist(id)
-      const ownerData = await userApi.getUserProfile(data.owner_id)
-      playlist.value = data
-      owner.value = ownerData
+      playlist.value = {
+        id: data.id,
+        title: data.title,
+        isPublic: data.is_public,
+        data: data.data,
+        owner: data.owner,
+      }
     } catch {
       console.error('Failed to load playlist:')
       error.value = 'Failed to load playlist'
@@ -34,7 +35,6 @@ export function usePlaylistDetail() {
 
   return {
     playlist,
-    owner,
     tracks,
     isLoading,
     error,

@@ -7,10 +7,10 @@ export function useSurahDetails() {
   const currentSurah = ref<UnifiedSurah | null>(null)
   const isLoading = ref(true)
 
-  const fetchSurah = async (
+  const initSurah = async (
     surahId: number,
-    riwayah: string,
     language: string,
+    riwayah: string,
     tafsir: string,
     transcriptionLang: string,
     reciter: string,
@@ -25,13 +25,14 @@ export function useSurahDetails() {
           quranApi.getTranscriptionSurah(riwayah, transcriptionLang, surahId),
           quranApi.getTimestamps(riwayah, reciter),
         ])
-      const timestamp = timestampsData.find((s: ApiTimestamp) => s.id === surahId)
 
-      if (!arabicData) throw new Error('Surah not found in Arabic data')
+      if (!arabicData) throw new Error('Surah not found')
+
+      const timestampSurah = timestampsData?.find((s: ApiTimestamp) => s.id === surahId)
 
       currentSurah.value = {
         id: arabicData.id,
-        name: translationData ? translationData.name : arabicData.name,
+        name: translationData?.name || arabicData.name,
         nameArabic: arabicData.name,
         revelationType: arabicData.type as 'meccan' | 'medinan',
         versesCount: arabicData.total_verses ?? arabicData.verses.length,
@@ -41,7 +42,7 @@ export function useSurahDetails() {
           const tVerse = translationData?.verses.find((tv: ApiVerse) => tv.id === v.id)
           const tafVerse = tafsirData?.verses.find((tafv: ApiVerse) => tafv.id === v.id)
           const trVerse = transcrData?.verses.find((trv: ApiVerse) => trv.id === v.id)
-          const tsVerse = timestamp?.verses.find((tsv: { id: number }) => tsv.id === v.id)
+          const tsVerse = timestampSurah?.verses.find((tsv: { id: number }) => tsv.id === v.id)
 
           return {
             number: v.id,
@@ -55,11 +56,11 @@ export function useSurahDetails() {
         }),
       }
     } catch (error) {
-      console.error('Error fetching full materials:', error)
+      console.error('Error initializing surah:', error)
     } finally {
       isLoading.value = false
     }
   }
 
-  return { currentSurah, isLoading, fetchSurah }
+  return { currentSurah, isLoading, initSurah }
 }

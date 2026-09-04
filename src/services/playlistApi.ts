@@ -10,24 +10,48 @@ import type {
   ApiPlaylistRelation,
   ApiUserSharedPlaylistsResponse,
   ApiUserOwnedPlaylistsResponse,
+  IPlaylistApi,
 } from '@/types/playlist.types'
-import getAuthHeaders from '@/utils/authUtils'
+import { getAuthHeaders } from '@/utils/authUtils'
+import { cacheService } from './cacheService'
+import { emitEvent } from '@/utils/eventUtils'
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL
 
-const playlistApi = {
+const playlistApi: IPlaylistApi = {
+  async getPlaylist(playlistId: string): Promise<ApiPlaylist> {
+    return cacheService.fetchCached(`${API_BASE}/playlists/${playlistId}`, 5 * 60 * 1000)
+  },
+
   async getPublicPlaylists(limit: number = 20, offset: number = 0): Promise<ApiPaginatedPlaylists> {
-    const res = await fetch(`${API_BASE}/playlists/public?limit=${limit}&offset=${offset}`, {
-      headers: getAuthHeaders(),
-    })
+    const res = await fetch(`${API_BASE}/playlists/public?limit=${limit}&offset=${offset}`)
     if (!res.ok) throw new Error('Failed to fetch public playlists')
     return res.json()
   },
 
-  async searchPlaylists(q: string, limit: number = 20): Promise<ApiPaginatedPlaylists> {
-    const res = await fetch(`${API_BASE}/playlists/search?q=${q}&limit=${limit}`, {
+  async getUserSharedPlaylists(userId: string): Promise<ApiUserSharedPlaylistsResponse> {
+    const res = await fetch(`${API_BASE}/playlists/user/${userId}/shared`, {
       headers: getAuthHeaders(),
     })
+    if (!res.ok) throw new Error('Failed to fetch shared playlists')
+    return res.json()
+  },
+
+  async getUserOwnedPlaylists(userId: string): Promise<ApiUserOwnedPlaylistsResponse> {
+    const res = await fetch(`${API_BASE}/playlists/user/${userId}/owned`, {
+      headers: getAuthHeaders(),
+    })
+    if (!res.ok) throw new Error('Failed to fetch owned playlists')
+    return res.json()
+  },
+
+  async searchPlaylists(q: string, limit: number = 20): Promise<ApiPaginatedPlaylists> {
+    const res = await fetch(
+      `${API_BASE}/playlists/search?q=${encodeURIComponent(q)}&limit=${limit}`,
+      {
+        headers: getAuthHeaders(),
+      },
+    )
     if (!res.ok) throw new Error('Failed to search playlists')
     return res.json()
   },
@@ -39,18 +63,13 @@ const playlistApi = {
   }): Promise<ApiCreatePlaylistResponse> {
     const res = await fetch(`${API_BASE}/playlists/`, {
       method: 'POST',
-      headers: getAuthHeaders(),
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      },
       body: JSON.stringify(payload),
     })
     if (!res.ok) throw new Error('Failed to create playlist')
-    return res.json()
-  },
-
-  async getPlaylist(playlistId: string): Promise<ApiPlaylist> {
-    const res = await fetch(`${API_BASE}/playlists/${playlistId}`, {
-      headers: getAuthHeaders(),
-    })
-    if (!res.ok) throw new Error('Failed to fetch playlist')
     return res.json()
   },
 
@@ -60,10 +79,24 @@ const playlistApi = {
   ): Promise<ApiMessageResponse> {
     const res = await fetch(`${API_BASE}/playlists/${playlistId}`, {
       method: 'PATCH',
-      headers: getAuthHeaders(),
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      },
       body: JSON.stringify(payload),
     })
     if (!res.ok) throw new Error('Failed to update playlist')
+
+    await cacheService.updateCache<ApiPlaylist>(
+      `${API_BASE}/playlists/${playlistId}`,
+      (playlist) => ({
+        ...playlist,
+        title: payload.title || playlist.title,
+        data: payload.data || playlist.data,
+        is_public: payload.is_public || playlist.is_public,
+      }),
+    )
+    emitEvent('PLAYLIST_UPDATED')
     return res.json()
   },
 
@@ -73,6 +106,9 @@ const playlistApi = {
       headers: getAuthHeaders(),
     })
     if (!res.ok) throw new Error('Failed to delete playlist')
+
+    await cacheService.deleteCache(`${API_BASE}/playlists/${playlistId}`)
+    emitEvent('PLAYLIST_UPDATED')
   },
 
   async forkPlaylist(playlistId: string): Promise<ApiForkPlaylistResponse> {
@@ -90,7 +126,10 @@ const playlistApi = {
   ): Promise<ApiShareLinkResponse> {
     const res = await fetch(`${API_BASE}/playlists/${playlistId}/share`, {
       method: 'POST',
-      headers: getAuthHeaders(),
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      },
       body: JSON.stringify(payload),
     })
     if (!res.ok) throw new Error('Failed to generate share link')
@@ -128,22 +167,6 @@ const playlistApi = {
       headers: getAuthHeaders(),
     })
     if (!res.ok) throw new Error('Failed to remove member. You might not have permission.')
-    return res.json()
-  },
-
-  async getUserSharedPlaylists(userId: string): Promise<ApiUserSharedPlaylistsResponse> {
-    const res = await fetch(`${API_BASE}/playlists/user/${userId}/shared`, {
-      headers: getAuthHeaders(),
-    })
-    if (!res.ok) throw new Error('Failed to fetch shared playlists')
-    return res.json()
-  },
-
-  async getUserOwnedPlaylists(userId: string): Promise<ApiUserOwnedPlaylistsResponse> {
-    const res = await fetch(`${API_BASE}/playlists/user/${userId}/owned`, {
-      headers: getAuthHeaders(),
-    })
-    if (!res.ok) throw new Error('Failed to fetch owned playlists')
     return res.json()
   },
 }
