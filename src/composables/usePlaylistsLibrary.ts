@@ -16,7 +16,8 @@ export function usePlaylistsLibrary() {
 
   const discoverPlaylists = computed(() => {
     return publicPlaylists.value.filter((p) => {
-      if (personalPlaylistIds.value.has(p.id)) return false
+      if (personalPlaylistIds.value.has(p.id) || isLoadingPublic.value || isLoadingPersonal.value)
+        return false
       return true
     })
   })

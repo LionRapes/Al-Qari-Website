@@ -168,5 +168,11 @@
   "validation": {
     "emailInvalid": "Please include an '@' in the email address.",
     "required": "This field is required."
+  },
+  "loading": {
+    "establishing": "Establishing connection...",
+    "success": "Connection successful. Loading...",
+    "unavailable": "Server is currently unavailable. Please try again later.",
+    "network_error": "Network error. Retrying in 5 seconds..."
   }
 }

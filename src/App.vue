@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import TheHeader from './components/header/TheHeader.vue'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import TheHeader from './components/header/TheHeader.vue'
 import AudioPlayer from './components/quran/AudioPlayer.vue'
+import LoadingScreen from './components/LoadingScreen.vue'
 
 const { t } = useI18n()
+const isLoading = ref(true)
 
 const navigation = computed(() => [
   { name: t('nav.home'), path: '/' },
@@ -14,7 +16,9 @@ const navigation = computed(() => [
 </script>
 
 <template>
-  <div class="min-h-screen bg-base-gradient text-text-base font-sans pb-12">
+  <LoadingScreen v-if="isLoading" @ready="isLoading = false" />
+
+  <div v-else class="min-h-screen bg-base-gradient text-text-base font-sans pb-12">
     <TheHeader :navigation="navigation" />
 
     <div class="grid w-full">
