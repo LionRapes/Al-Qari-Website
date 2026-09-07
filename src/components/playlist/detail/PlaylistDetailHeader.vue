@@ -35,13 +35,13 @@ defineProps<{
           class="w-full h-full object-cover"
         />
         <span v-else class="text-primary text-xs font-bold uppercase">
-          {{ (playlist.owner.username || playlist.owner.id || 'U').charAt(0) }}
+          {{ (playlist.owner.username || playlist.owner.owner_id || 'U').charAt(0) }}
         </span>
       </div>
       <p class="text-sm text-text-muted flex items-center gap-1">
         {{ $t('playlist.detail.createdBy') }}
         <span class="font-medium text-text-base">
-          {{ playlist.owner.username || playlist.owner.id }}
+          {{ playlist.owner.username || playlist.owner.owner_id }}
         </span>
       </p>
     </div>

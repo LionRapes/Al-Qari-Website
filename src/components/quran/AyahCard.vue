@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import IconInfo from '../icons/IconInfo.vue'
-import IconCopy from '../icons/IconCopy.vue'
-import IconPlay from '../icons/IconPlay.vue'
-import IconBook from '../icons/IconBook.vue'
-import CopyWidget from '../CopyWidget.vue'
+import IconInfo from '@/components/icons/IconInfo.vue'
+import IconCopy from '@/components/icons/IconCopy.vue'
+import IconPlay from '@/components/icons/IconPlay.vue'
+import IconBook from '@/components/icons/IconBook.vue'
+import CopyWidget from '@/components/CopyWidget.vue'
 
 defineProps<{
   ayahNumber: number
@@ -62,7 +62,7 @@ const isTafsirOpen = ref(false)
             <button
               type="button"
               @click="copy"
-              class="p-1.5 rounded-lg bg-bg-surface-hover text-text-muted hover:text-primary transition-colors"
+              class="p-1.5 rounded-lg text-text-muted hover:text-primary transition-colors"
             >
               <IconCopy class="w-3.5 h-3.5" />
             </button>

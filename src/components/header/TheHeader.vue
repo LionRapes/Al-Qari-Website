@@ -7,6 +7,8 @@ import MobileNav from './MobileNav.vue'
 import UserProfile from './UserProfile.vue'
 import { useI18n } from 'vue-i18n'
 import { offEvent, onEvent } from '@/utils/eventUtils.ts'
+import ThemeSwitcher from './ThemeSwitcher.vue'
+import LanguageSwitcher from './LanguageSwitcher.vue'
 
 defineProps<{
   navigation: { name: string; path: string }[]
@@ -16,8 +18,7 @@ const isMobileMenuOpen = ref(false)
 const isLoggedIn = ref(false)
 const userName = ref('')
 const avatarUrl = ref('')
-const userTier = ref('')
-
+const role = ref('')
 const { t } = useI18n()
 
 const loadProfile = async () => {
@@ -31,7 +32,7 @@ const loadProfile = async () => {
       isLoggedIn.value = true
       userName.value = profile.username
       avatarUrl.value = profile.avatar_url
-      userTier.value = t(`userTier.default`)
+      role.value = t(`role.${profile.role}`)
     } catch {
       isLoggedIn.value = false
     }
@@ -47,14 +48,15 @@ onUnmounted(() => {
   offEvent('USER_PROFILE_UPDATED', loadProfile)
 })
 
-// [[HEADER-toggleMenu|Close/Open mobile nav menu]]
 const toggleMenu = () => {
   isMobileMenuOpen.value = !isMobileMenuOpen.value
 }
 </script>
 
 <template>
-  <header class="sticky top-0 max-w-350 mx-auto px-8 py-8 flex items-center justify-between z-50">
+  <header
+    class="sticky top-0 max-w-350 mx-auto px-8 py-8 flex items-center justify-between z-50 w-full"
+  >
     <div
       class="absolute inset-0 w-full h-[120%] -z-10 pointer-events-none bg-bg-surface/20 backdrop-blur-md mask-[linear-gradient(to_bottom,black_50%,transparent)] [-webkit-mask-image:linear-gradient(to_bottom,black_50%,transparent)]"
     ></div>
@@ -65,12 +67,17 @@ const toggleMenu = () => {
       <DesktopNav :items="navigation" />
     </div>
 
-    <UserProfile
-      :is-logged-in="isLoggedIn"
-      :name="userName"
-      :tier="userTier"
-      :avatar-url="avatarUrl"
-    />
+    <div class="flex items-center gap-4">
+      <LanguageSwitcher />
+      <ThemeSwitcher />
+
+      <UserProfile
+        :is-logged-in="isLoggedIn"
+        :name="userName"
+        :role="role"
+        :avatar-url="avatarUrl"
+      />
+    </div>
 
     <MobileNav :is-open="isMobileMenuOpen" :items="navigation" @close="isMobileMenuOpen = false" />
   </header>

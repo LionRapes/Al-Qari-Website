@@ -7,7 +7,6 @@ defineProps<{
   isMobileMenuOpen: boolean
 }>()
 
-// [[#HEADER-toggleMenu| ]]
 defineEmits<{
   (e: 'toggle'): void
 }>()

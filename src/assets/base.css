@@ -21,6 +21,11 @@
 
 @layer base {
   :root {
+    --bg-gradient-light: linear-gradient(135deg, #dcdcdc 30%, #c0c0c0 100%);
+    --bg-gradient-dark: linear-gradient(135deg, #0c1510 30%, #193726 100%);
+  }
+
+  :root {
     --primary: #91712d;
 
     --bg-base: #b1b1b1;
@@ -38,38 +43,51 @@
     --text-blue: #2a57b1;
     --text-green: #39c05f;
     --text-red: #ff3333;
+
+    --dark-layer-opacity: 0;
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --primary: #d4af60;
+  :root.dark {
+    --primary: #d4af60;
 
-      --bg-base: #0c1510;
-      --bg-base-gradient: linear-gradient(135deg, #0c1510 30%, #193726 100%);
-      --bg-surface: #142017;
-      --bg-surface-gradient: linear-gradient(180deg, #142017 30%, #1d2f22 100%);
-      --bg-surface-hover: #1a281e;
+    --bg-base: #0c1510;
+    --bg-base-gradient: linear-gradient(135deg, #0c1510 30%, #193726 100%);
+    --bg-surface: #142017;
+    --bg-surface-gradient: linear-gradient(180deg, #142017 30%, #1d2f22 100%);
+    --bg-surface-hover: #1a281e;
 
-      --border-theme: #1f3024;
+    --border-theme: #1f3024;
 
-      --text-heading: #ffffff;
-      --text-base: #e5e7eb;
-      --text-muted: #9ca3af;
-      --text-hover: #6b7280;
-      --text-blue: #2a57b1;
-      --text-green: #39c05f;
-      --text-red: #ff3333;
+    --text-heading: #ffffff;
+    --text-base: #e5e7eb;
+    --text-muted: #9ca3af;
+    --text-hover: #6b7280;
+    --text-blue: #2a57b1;
+    --text-green: #39c05f;
+    --text-red: #ff3333;
+
+    --dark-layer-opacity: 1;
+  }
+
+  @layer base {
+    *,
+    *::before,
+    *::after {
+      transition-property: background-color, border-color, color, fill, stroke;
+      transition-duration: 1000ms;
+      transition-timing-function: ease-in-out;
     }
-  }
 
-  html,
-  body,
-  #app {
-    background: var(--bg-base);
-    overscroll-behavior: none;
-    width: 100%;
-    min-height: 100vh;
-    margin: 0;
-    padding: 0;
+    html,
+    body,
+    #app {
+      background: var(--bg-base);
+      color: var(--text-base);
+      overscroll-behavior: none;
+      width: 100%;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
   }
 }

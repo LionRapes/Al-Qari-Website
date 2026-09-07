@@ -34,7 +34,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="max-w-3xl mx-auto px-6 mt-8 pb-12">
+  <main class="max-w-3xl mx-auto px-8 mt-6 pb-12">
     <button
       @click="handleBack"
       class="mb-6 flex items-center gap-2 text-sm font-medium text-text-muted hover:text-primary transition-colors cursor-pointer"

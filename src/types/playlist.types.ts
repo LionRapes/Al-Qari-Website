@@ -1,22 +1,18 @@
-import type { ApiMessageResponse } from './common.types'
-
-// --- Core Models ---
 export interface ApiPlaylist {
   id: string
-  owner_id: string
   title: string
   data: string
   is_public: boolean
   forked_from_id: string
-  created_at: string
-  updated_at: string
-  added_at?: string
-  role?: string
+  created_at: number
+  updated_at: number
   owner?: {
-    id: string
+    owner_id: string
     username: string
     avatar_url: string
   }
+  added_at?: string
+  role?: string
 }
 
 export interface ApiPlaylistMember {
@@ -27,30 +23,6 @@ export interface ApiPlaylistMember {
   added_at: string
 }
 
-export interface ApiUserSharedPlaylist {
-  playlist_id: string
-  title: string
-  is_public: boolean
-  role: string
-  added_at: string
-  owner?: {
-    id: string
-    username: string
-    avatar_url: string
-  }
-}
-
-export interface PlaylistItem {
-  surahNumber: number
-  riwayahId: string
-  reciterId: string
-  translationId: string
-  tafsirId: string
-  ayahs: number[]
-}
-
-// --- Response & Payload Types ---
-
 export interface ApiPaginatedPlaylists {
   limit: number
   offset?: number
@@ -58,14 +30,18 @@ export interface ApiPaginatedPlaylists {
   playlists: ApiPlaylist[]
 }
 
-export interface ApiCreatePlaylistResponse {
+export interface ApiPlaylistMembersResponse {
   playlist_id: string
-  message: string
+  members: ApiPlaylistMember[]
 }
 
-export interface ApiForkPlaylistResponse {
-  new_playlist_id: string
-  message: string
+export interface ApiUserPlaylistsResponse {
+  user_id: string
+  playlists: ApiPlaylist[]
+}
+
+export interface ApiCreatePlaylistResponse {
+  playlist_id: string
 }
 
 export interface ApiShareLinkResponse {
@@ -74,14 +50,8 @@ export interface ApiShareLinkResponse {
 }
 
 export interface ApiJoinPlaylistResponse {
-  message: string
   playlist_id: string
   role: string
-}
-
-export interface ApiPlaylistMembersResponse {
-  playlist_id: string
-  members: ApiPlaylistMember[]
 }
 
 export interface ApiPlaylistRelation {
@@ -91,39 +61,36 @@ export interface ApiPlaylistRelation {
   added_at?: string
 }
 
-export interface ApiUserSharedPlaylistsResponse {
-  user_id: string
-  playlists: ApiUserSharedPlaylist[]
+export interface ApiUpdatePlaylistRequest {
+  title?: string
+  data?: string
+  is_public?: boolean
 }
 
-export interface ApiUserOwnedPlaylistsResponse {
-  user_id: string
-  playlists: ApiPlaylist[]
+export interface ApiGenerateShareLinkRequest {
+  role: string
+  expires_in_hours?: number
 }
 
 export interface IPlaylistApi {
-  getPublicPlaylists(limit?: number, offset?: number): Promise<ApiPaginatedPlaylists>
-  searchPlaylists(q: string, limit?: number): Promise<ApiPaginatedPlaylists>
-  createPlaylist(payload: {
-    title: string
-    data: string
-    is_public?: boolean
-  }): Promise<ApiCreatePlaylistResponse>
   getPlaylist(playlistId: string): Promise<ApiPlaylist>
-  updatePlaylist(
-    playlistId: string,
-    payload: { title?: string; data?: string; is_public?: boolean },
-  ): Promise<ApiMessageResponse>
+  getPublicPlaylists(limit?: number, offset?: number): Promise<ApiPaginatedPlaylists>
+  getUserSharedPlaylists(userId: string): Promise<ApiUserPlaylistsResponse>
+  getUserOwnedPlaylists(userId: string): Promise<ApiUserPlaylistsResponse>
+  searchPlaylists(q: string, limit?: number): Promise<ApiPaginatedPlaylists>
+
+  createPlaylist(payload: ApiUpdatePlaylistRequest): Promise<ApiCreatePlaylistResponse>
+  updatePlaylist(playlistId: string, payload: ApiUpdatePlaylistRequest): Promise<void>
   deletePlaylist(playlistId: string): Promise<void>
-  forkPlaylist(playlistId: string): Promise<ApiForkPlaylistResponse>
+  forkPlaylist(playlistId: string): Promise<ApiCreatePlaylistResponse>
+
   generateShareLink(
     playlistId: string,
-    payload: { role: string; expires_in_hours?: number },
+    payload: ApiGenerateShareLinkRequest,
   ): Promise<ApiShareLinkResponse>
   joinPlaylist(token: string): Promise<ApiJoinPlaylistResponse>
+
   getMembers(playlistId: string): Promise<ApiPlaylistMembersResponse>
   getRelation(playlistId: string, userId: string): Promise<ApiPlaylistRelation>
-  removeMember(playlistId: string, targetUserId: string): Promise<ApiMessageResponse>
-  getUserSharedPlaylists(userId: string): Promise<ApiUserSharedPlaylistsResponse>
-  getUserOwnedPlaylists(userId: string): Promise<ApiUserOwnedPlaylistsResponse>
+  removeMember(playlistId: string, targetUserId: string): Promise<void>
 }

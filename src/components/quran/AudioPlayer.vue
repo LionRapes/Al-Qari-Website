@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useAudioPlayer } from '@/composables/useAudioPlayer'
-import IconPlay from '../icons/IconPlay.vue'
+import IconPlay from '@/components/icons/IconPlay.vue'
 
 const {
   activeSurahId,
@@ -24,7 +24,7 @@ const handleGlobalSeek = (event: Event) => {
   <transition name="slide-up">
     <div
       v-if="activeSurahId && activeReciterId"
-      class="fixed bottom-0 left-0 right-0 mx-auto w-9/10 bg-bg-surface border-t border-border-theme rounded-2xl shadow-2xl z-50 px-6 py-2 max-h-18"
+      class="fixed bottom-5 left-0 right-0 mx-auto w-9/10 bg-bg-surface border-t border-border-theme rounded-2xl shadow-2xl z-50 px-6 py-1.5"
     >
       <div class="max-w-350 mx-auto flex items-center gap-6">
         <!-- Track Info -->

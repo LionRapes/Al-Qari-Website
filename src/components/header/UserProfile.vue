@@ -4,7 +4,7 @@ import IconUser from '@/components/icons/IconUser.vue'
 defineProps<{
   isLoggedIn: boolean
   name?: string
-  tier?: string
+  role?: string
   avatarUrl?: string
 }>()
 </script>
@@ -29,7 +29,7 @@ defineProps<{
       <template v-if="isLoggedIn">
         <div class="text-text-base font-semibold">{{ name }}</div>
         <div class="text-primary text-[10px] tracking-wider font-semibold uppercase mt-0.5">
-          {{ tier }}
+          {{ role }}
         </div>
       </template>
       <template v-else>

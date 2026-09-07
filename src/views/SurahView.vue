@@ -148,7 +148,7 @@ watch(() => route.query, loadSurahData, { deep: true })
               >
                 <button
                   @click="toggleAyah(ayah.number)"
-                  class="w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all cursor-pointer shadow-sm"
+                  class="w-5.5 h-5.5 mr-1.5 rounded-md border-2 flex items-center justify-center transition-all cursor-pointer shadow-sm"
                   :class="
                     selectedAyahs.includes(ayah.number)
                       ? 'bg-primary border-primary text-bg-base opacity-100'

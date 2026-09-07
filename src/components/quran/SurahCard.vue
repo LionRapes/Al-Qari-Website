@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import IconBook from '../icons/IconBook.vue'
-import IconOther from '../icons/IconOther.vue'
-import IconPlay from '../icons/IconPlay.vue'
+import IconBook from '@/components/icons/IconBook.vue'
+import IconOther from '@/components/icons/IconOther.vue'
+import IconPlay from '@/components/icons/IconPlay.vue'
 
 interface Props {
   id: number

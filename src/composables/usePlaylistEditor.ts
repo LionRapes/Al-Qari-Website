@@ -3,7 +3,7 @@ import { useRouter } from 'vue-router'
 import playlistApi from '@/services/playlistApi'
 import { encodePlaylistString, encodeAyahArray } from '@/utils/playlistUtils'
 import { parsePlaylistString } from '@/utils/playlistUtils'
-import type { PlaylistItem } from '@/types/playlist.types'
+import type { PlaylistItem } from '@/types/ui.types'
 
 export interface EditorTrack extends Omit<PlaylistItem, 'ayahs'> {
   rawAyahsInput: string

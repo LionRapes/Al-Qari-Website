@@ -58,7 +58,7 @@ export function usePlaylistsLibrary() {
       }))
 
       sharedPlaylists.value = sharedRes.playlists.map((p) => ({
-        id: p.playlist_id,
+        id: p.id,
         title: p.title,
         isPublic: p.is_public,
         role: p.role,
@@ -80,7 +80,7 @@ export function usePlaylistsLibrary() {
         title: p.title,
         isPublic: p.is_public,
         role: 'viewer',
-        ownerId: p.owner_id,
+        ownerId: p.owner?.id,
       }))
     } catch (error) {
       console.error('Failed to load public playlists:', error)

@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import IconError from '@/components/icons/IconError.vue'
-import { validateNickname } from '@/utils/validators'
+import { NICKNAME_REGEX_INVERTED, validateNickname } from '@/utils/validators'
 
 const props = defineProps<{
   currentNickname: string
@@ -35,6 +35,17 @@ const startEdit = () => {
 const cancelEdit = () => {
   isEditing.value = false
   localError.value = ''
+}
+
+const handleInput = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const rawValue = target.value
+  const sanitizedValue = rawValue.replace(NICKNAME_REGEX_INVERTED, '')
+
+  if (rawValue !== sanitizedValue) localError.value = t('profile.errors.onlyLatin')
+  else localError.value = ''
+
+  draftNickname.value = sanitizedValue
 }
 
 const handleSave = () => {
@@ -83,7 +94,7 @@ defineExpose({
         <input
           type="text"
           v-model="draftNickname"
-          @input="draftNickname = draftNickname.replace(/[^a-zA-Z0-9_-]/g, '')"
+          @input="handleInput"
           :placeholder="$t('profile.editor.placeholder')"
           maxlength="24"
           class="px-3 py-1.5 text-sm bg-transparent border border-border-theme/60 rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-text-base"

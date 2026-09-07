@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, watch } from 'vue' // Добавлен watch
 import { useI18n } from 'vue-i18n'
 import { useLastRead, type LastReadData } from '@/composables/useLastRead'
 import quranApi from '@/services/quranApi'
@@ -28,23 +28,28 @@ export function useHomeDashboard() {
 
   const loadSurahOfTheDayData = async () => {
     try {
+      const dailySurahId = await cacheService.getOrSet(
+        'daily_surah_id',
+        async () => Math.floor(Math.random() * 114) + 1,
+        24 * 60 * 60 * 1000,
+      )
+
       const cached = await cacheService.getOrSet(
-        'surahOfTheDay',
+        `surahOfTheDay_${dailySurahId}_${locale.value}`,
         async () => {
-          const randomSurahId = Math.floor(Math.random() * 114) + 1
-          const data = await quranApi.getSurah('hafs', randomSurahId)
-          const dataTranslated = await quranApi.getTranslatedSurah(locale.value, randomSurahId)
+          const data = await quranApi.getSurah('hafs', dailySurahId)
+          const dataTranslated = await quranApi.getTranslatedSurah(locale.value, dailySurahId)
           return {
             data,
             dataTranslated,
-            randomSurahId,
+            dailySurahId,
           }
         },
         24 * 60 * 60 * 1000,
       )
 
       surahOfTheDay.value = {
-        title: `${cached.dataTranslated.name || cached.data.name} (${cached.randomSurahId})`,
+        title: `${cached.dataTranslated.name || cached.data.name} (${cached.dailySurahId})`,
         englishText: cached.dataTranslated.verses[0]?.text || '',
         arabicText: cached.data.name,
       }
@@ -69,6 +74,10 @@ export function useHomeDashboard() {
 
     await Promise.all([loadSurahOfTheDayData(), loadQuotesData()])
   }
+
+  watch(locale, async () => {
+    await Promise.all([loadSurahOfTheDayData(), loadQuotesData()])
+  })
 
   return {
     lastRead,

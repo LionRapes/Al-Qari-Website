@@ -6,7 +6,8 @@ import { useRouter } from 'vue-router'
 import IconShare from '@/components/icons/IconShare.vue'
 import CopyWidget from '@/components/CopyWidget.vue'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
-import IconEdit from '../icons/IconEdit.vue'
+import IconEdit from '@/components/icons/IconEdit.vue'
+import IconDelete from '../icons/IconDelete.vue'
 
 const props = defineProps<{
   playlist: PlaylistSummary
@@ -100,14 +101,7 @@ const executeDelete = async () => {
           @click.stop="showDeleteModal = true"
           class="p-1.5 rounded-lg bg-bg-surface-hover text-text-muted hover:text-text-red transition-colors"
         >
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-            />
-          </svg>
+          <IconDelete />
         </button>
 
         <!-- Role Badge -->

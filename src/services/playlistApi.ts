@@ -1,16 +1,15 @@
-import type { ApiMessageResponse } from '@/types/common.types'
 import type {
   ApiPlaylist,
   ApiPaginatedPlaylists,
   ApiCreatePlaylistResponse,
-  ApiForkPlaylistResponse,
   ApiShareLinkResponse,
   ApiJoinPlaylistResponse,
   ApiPlaylistMembersResponse,
   ApiPlaylistRelation,
-  ApiUserSharedPlaylistsResponse,
-  ApiUserOwnedPlaylistsResponse,
   IPlaylistApi,
+  ApiUserPlaylistsResponse,
+  ApiUpdatePlaylistRequest,
+  ApiGenerateShareLinkRequest,
 } from '@/types/playlist.types'
 import { getAuthHeaders } from '@/utils/authUtils'
 import { cacheService } from './cacheService'
@@ -29,7 +28,7 @@ const playlistApi: IPlaylistApi = {
     return res.json()
   },
 
-  async getUserSharedPlaylists(userId: string): Promise<ApiUserSharedPlaylistsResponse> {
+  async getUserSharedPlaylists(userId: string): Promise<ApiUserPlaylistsResponse> {
     const res = await fetch(`${API_BASE}/playlists/user/${userId}/shared`, {
       headers: getAuthHeaders(),
     })
@@ -37,7 +36,7 @@ const playlistApi: IPlaylistApi = {
     return res.json()
   },
 
-  async getUserOwnedPlaylists(userId: string): Promise<ApiUserOwnedPlaylistsResponse> {
+  async getUserOwnedPlaylists(userId: string): Promise<ApiUserPlaylistsResponse> {
     const res = await fetch(`${API_BASE}/playlists/user/${userId}/owned`, {
       headers: getAuthHeaders(),
     })
@@ -56,11 +55,7 @@ const playlistApi: IPlaylistApi = {
     return res.json()
   },
 
-  async createPlaylist(payload: {
-    title: string
-    data: string
-    is_public?: boolean
-  }): Promise<ApiCreatePlaylistResponse> {
+  async createPlaylist(payload: ApiUpdatePlaylistRequest): Promise<ApiCreatePlaylistResponse> {
     const res = await fetch(`${API_BASE}/playlists/`, {
       method: 'POST',
       headers: {
@@ -73,10 +68,7 @@ const playlistApi: IPlaylistApi = {
     return res.json()
   },
 
-  async updatePlaylist(
-    playlistId: string,
-    payload: { title?: string; data?: string; is_public?: boolean },
-  ): Promise<ApiMessageResponse> {
+  async updatePlaylist(playlistId: string, payload: ApiUpdatePlaylistRequest): Promise<void> {
     const res = await fetch(`${API_BASE}/playlists/${playlistId}`, {
       method: 'PATCH',
       headers: {
@@ -97,7 +89,6 @@ const playlistApi: IPlaylistApi = {
       }),
     )
     emitEvent('PLAYLIST_UPDATED')
-    return res.json()
   },
 
   async deletePlaylist(playlistId: string): Promise<void> {
@@ -111,7 +102,7 @@ const playlistApi: IPlaylistApi = {
     emitEvent('PLAYLIST_UPDATED')
   },
 
-  async forkPlaylist(playlistId: string): Promise<ApiForkPlaylistResponse> {
+  async forkPlaylist(playlistId: string): Promise<ApiCreatePlaylistResponse> {
     const res = await fetch(`${API_BASE}/playlists/${playlistId}/fork`, {
       method: 'POST',
       headers: getAuthHeaders(),
@@ -122,7 +113,7 @@ const playlistApi: IPlaylistApi = {
 
   async generateShareLink(
     playlistId: string,
-    payload: { role: string; expires_in_hours?: number },
+    payload: ApiGenerateShareLinkRequest,
   ): Promise<ApiShareLinkResponse> {
     const res = await fetch(`${API_BASE}/playlists/${playlistId}/share`, {
       method: 'POST',
@@ -161,13 +152,12 @@ const playlistApi: IPlaylistApi = {
     return res.json()
   },
 
-  async removeMember(playlistId: string, targetUserId: string): Promise<ApiMessageResponse> {
+  async removeMember(playlistId: string, targetUserId: string): Promise<void> {
     const res = await fetch(`${API_BASE}/playlists/${playlistId}/members/${targetUserId}`, {
       method: 'DELETE',
       headers: getAuthHeaders(),
     })
     if (!res.ok) throw new Error('Failed to remove member. You might not have permission.')
-    return res.json()
   },
 }
 

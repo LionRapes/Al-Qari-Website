@@ -27,7 +27,7 @@ export interface PlaylistSummary {
   role?: string
   data?: string
   owner?: {
-    id: string
+    owner_id: string
     username: string
     avatar_url: string
   }
@@ -52,4 +52,13 @@ export interface SurahOfDay {
   title: string
   englishText: string
   arabicText: string
+}
+
+export interface PlaylistItem {
+  surahNumber: number
+  riwayahId: string
+  reciterId: string
+  translationId: string
+  tafsirId: string
+  ayahs: number[]
 }

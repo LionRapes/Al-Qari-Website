@@ -9,8 +9,9 @@
   "nav": {
     "home": "Home",
     "quran": "Quran",
-    "profile": "Profile",
     "playlists": "Playlists",
+    "forum": "Forum",
+    "profile": "Profile",
     "login": "Log in"
   },
   "home": {
@@ -143,9 +144,88 @@
       "goToLogin": "Go to Login"
     }
   },
-  "userTier": {
+  "forum": {
+    "view": "View discussions →",
+    "header": {
+      "title": "Community Forum",
+      "subtitle": "Join the discussion, ask questions, and share your thoughts."
+    },
+    "error": {
+      "failed": "Failed to load forum categories.",
+      "retry": "Try again"
+    },
+    "topic": {
+      "back": "← Back to Categories",
+      "title": "Category Discussions",
+      "new_topic": "+ New Topic",
+
+      "loading": "Loading topics...",
+      "error": {
+        "failed": "Failed to load topics.",
+        "retry": "Try again"
+      },
+      "empty": {
+        "title": "No topics found in this category.",
+        "cta": "Be the first to start a discussion!"
+      },
+      "indicators": {
+        "pinned": "Pinned",
+        "locked": "Locked"
+      },
+      "load_more": {
+        "default": "Load More Topics",
+        "loading": "Loading..."
+      },
+      "unknown_user": "Unknown User"
+    },
+    "post": {
+      "back": "← Back to Topics",
+      "title": "Discussion Thread",
+
+      "loading": "Loading conversation...",
+      "error": {
+        "failed": "Failed to load posts.",
+        "retry": "Try again"
+      },
+
+      "unknown_user": "Unknown User",
+
+      "load_more": {
+        "default": "Load Earlier Posts",
+        "loading": "Loading..."
+      },
+
+      "reply": {
+        "title": "Leave a Reply",
+        "placeholder": "Type your reply here (Markdown supported)...",
+        "error": "Failed to post reply.",
+        "submit": {
+          "default": "Post Reply",
+          "loading": "Posting..."
+        }
+      }
+    },
+    "categories": {
+      "news": {
+        "title": "News",
+        "description": "Latest news about Al-Qari Project"
+      }
+    },
+    "topics": {
+      "news": {
+        "announcement": {
+          "title": "Major Update to Al-Qari Platform",
+          "content": "We are excited to announce a new update to the Al-Qari project! The latest version introduces improved recitation tracking, daily learning goals, and a redesigned interface for easier navigation. More enhancements are coming soon — stay tuned!"
+        }
+      }
+    },
+    "loading": "Loading categories...",
+    "empty": "No categories available at the moment."
+  },
+  "role": {
     "premium": "Premium",
-    "default": "Default"
+    "admin": "Admin",
+    "user": "Default"
   },
   "login": {
     "title": "Sign in to Al-Qari",

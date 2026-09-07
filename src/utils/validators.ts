@@ -1,7 +1,8 @@
 export type EmailValidationError = 'required' | 'invalid' | null
 
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const NICKNAME_REGEX = /^[a-zA-Z0-9_-]+$/
+export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+export const NICKNAME_REGEX = /^[a-zA-Z0-9_-]+$/
+export const NICKNAME_REGEX_INVERTED = /[^a-zA-Z0-9_-]/g
 
 export const validateEmail = (value: string): EmailValidationError => {
   const trimmed = value.trim()

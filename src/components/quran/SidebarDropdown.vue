@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import IconChevron from '../icons/IconChevron.vue'
+import IconChevron from '@/components/icons/IconChevron.vue'
 import type { DropdownOption } from '@/types/ui.types.ts'
 
 defineProps<{

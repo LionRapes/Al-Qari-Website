@@ -36,8 +36,8 @@ const onSaveNickname = async (newNickname: string, closeEditor: () => void) => {
   try {
     await updateNickname(newNickname)
     closeEditor()
-  } catch {
-    apiError.value = t('profile.errors.usernameTaken', 'Имя уже занято')
+  } catch (e) {
+    apiError.value = String(e) || t('profile.errors.usernameTaken', 'Имя уже занято')
   }
 }
 

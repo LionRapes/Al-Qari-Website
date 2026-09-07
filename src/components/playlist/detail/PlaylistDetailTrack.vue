@@ -4,7 +4,7 @@ import { useSurahDetails } from '@/composables/useSurahDetails'
 import { useAyahPlayback } from '@/composables/useAyahPlayback'
 import AyahCard from '@/components/quran/AyahCard.vue'
 import PlaylistDetailTrackHeader from '@/components/playlist/detail/PlaylistDetailTrackHeader.vue'
-import type { PlaylistItem } from '@/types/playlist.types'
+import type { PlaylistItem } from '@/types/ui.types'
 
 const props = defineProps<{
   track: PlaylistItem

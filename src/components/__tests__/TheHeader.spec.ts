@@ -2,11 +2,11 @@ import { mount } from '@vue/test-utils'
 import { describe, it, expect, beforeEach } from 'vitest'
 import { createRouter, createMemoryHistory } from 'vue-router'
 
-import TheHeader from '../header/TheHeader.vue'
-import HeaderLogo from '../header/HeaderLogo.vue'
-import DesktopNav from '../header/DesktopNav.vue'
-import MobileNav from '../header/MobileNav.vue'
-import UserProfile from '../header/UserProfile.vue'
+import TheHeader from '@/components/header/TheHeader.vue'
+import HeaderLogo from '@/components/header/HeaderLogo.vue'
+import DesktopNav from '@/components/header/DesktopNav.vue'
+import MobileNav from '@/components/header/MobileNav.vue'
+import UserProfile from '@/components/header/UserProfile.vue'
 
 const router = createRouter({
   history: createMemoryHistory(),
@@ -61,7 +61,7 @@ describe('TheHeader.vue', () => {
     const userProfile = wrapper.findComponent(UserProfile)
 
     expect(userProfile.props('name')).toBe('Амир Ибн Тарик')
-    expect(userProfile.props('tier')).toBe('Premium')
+    expect(userProfile.props('role')).toBe('Premium')
   })
 
   it('toggles the mobile menu state when HeaderLogo emits "toggle"', async () => {

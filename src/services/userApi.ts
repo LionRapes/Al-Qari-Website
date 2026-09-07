@@ -1,5 +1,4 @@
 import type { IUserApi, ApiAuthResponse, ApiUserProfile } from '@/types/user.types'
-import type { ApiMessageResponse } from '@/types/common.types'
 import { getAuthHeaders, handleApiError } from '@/utils/authUtils'
 import { cacheService } from './cacheService'
 import { emitEvent } from '@/utils/eventUtils'
@@ -11,7 +10,7 @@ const userApi: IUserApi = {
     return cacheService.fetchCached(`${API_BASE}/users/${userId}`, 5 * 60 * 1000)
   },
 
-  async requestMagicLink(email: string, lang: string): Promise<ApiMessageResponse> {
+  async requestMagicLink(email: string, lang: string): Promise<void> {
     const res = await fetch(`${API_BASE}/users/auth/magic-link`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -19,7 +18,6 @@ const userApi: IUserApi = {
     })
 
     handleApiError(res, 'Failed to request magic link')
-    return res.json()
   },
 
   async verifyMagicLink(token: string): Promise<ApiAuthResponse> {
@@ -33,7 +31,7 @@ const userApi: IUserApi = {
     return res.json()
   },
 
-  async updateUserProfile(userId: string, username: string): Promise<ApiMessageResponse> {
+  async updateUserProfile(userId: string, username: string): Promise<void> {
     const res = await fetch(`${API_BASE}/users/${userId}`, {
       method: 'PATCH',
       headers: getAuthHeaders(),
@@ -47,8 +45,6 @@ const userApi: IUserApi = {
       username,
     }))
     emitEvent('USER_PROFILE_UPDATED')
-
-    return res.json()
   },
 
   async uploadAvatar(userId: string, file: File): Promise<{ message: string; avatar_url: string }> {

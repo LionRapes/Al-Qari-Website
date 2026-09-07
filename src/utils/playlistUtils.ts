@@ -1,4 +1,4 @@
-import type { PlaylistItem } from '@/types/playlist.types'
+import type { PlaylistItem } from '@/types/ui.types'
 
 export function parsePlaylistString(playlistString: string): PlaylistItem[] {
   if (!playlistString) return []
