@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import UserAvatar from '@/components/UserAvatar.vue'
 import type { PlaylistSummary } from '@/types/ui.types'
 
 defineProps<{
@@ -25,23 +26,13 @@ defineProps<{
     </div>
 
     <div v-if="playlist.owner" class="flex items-center gap-3">
-      <div
-        class="w-8 h-8 rounded-full overflow-hidden bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0"
-      >
-        <img
-          v-if="playlist.owner.avatar_url"
-          :src="playlist.owner.avatar_url"
-          alt="playlist.Owner Avatar"
-          class="w-full h-full object-cover"
-        />
-        <span v-else class="text-primary text-xs font-bold uppercase">
-          {{ (playlist.owner.username || playlist.owner.owner_id || 'U').charAt(0) }}
-        </span>
+      <div class="h-8 w-8 rounded-full bg-border-theme text-text-heading shrink-0">
+        <UserAvatar :avatar-url="playlist.owner.avatar_url" :user-id="playlist.owner.id" />
       </div>
       <p class="text-sm text-text-muted flex items-center gap-1">
         {{ $t('playlist.detail.createdBy') }}
         <span class="font-medium text-text-base">
-          {{ playlist.owner.username || playlist.owner.owner_id }}
+          {{ playlist.owner.username || playlist.owner.id }}
         </span>
       </p>
     </div>

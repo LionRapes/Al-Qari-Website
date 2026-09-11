@@ -2,6 +2,7 @@ import { ref } from 'vue'
 import defaultUserApi from '@/services/userApi'
 import type { ApiUserProfile, IUserApi } from '@/types/user.types'
 import { cropAndCompressImage } from '@/utils/imageUtils'
+import { getAuthToken } from '@/utils/authUtils'
 
 export function useUserProfile(apiService: IUserApi = defaultUserApi) {
   const user = ref<ApiUserProfile | null>(null)
@@ -11,12 +12,10 @@ export function useUserProfile(apiService: IUserApi = defaultUserApi) {
   const isSaving = ref(false)
   const isUploadingAvatar = ref(false)
 
-  const loadProfile = async () => {
+  const loadProfile = async (id: string) => {
     isLoading.value = true
-    const token = localStorage.getItem('access_token')
-    const id = localStorage.getItem('user_id')
 
-    if (!token || !id) {
+    if (!getAuthToken() || !id) {
       isAuthenticated.value = false
       isLoading.value = false
       return
@@ -38,7 +37,7 @@ export function useUserProfile(apiService: IUserApi = defaultUserApi) {
 
     isSaving.value = true
     try {
-      await apiService.updateUserProfile(user.value.id, newNickname)
+      await apiService.updateUserProfile(newNickname)
       user.value.username = newNickname
     } finally {
       isSaving.value = false
@@ -51,7 +50,7 @@ export function useUserProfile(apiService: IUserApi = defaultUserApi) {
     isUploadingAvatar.value = true
     try {
       const optimizedFile = await cropAndCompressImage(file)
-      const response = await apiService.uploadAvatar(user.value.id, optimizedFile)
+      const response = await apiService.uploadAvatar(optimizedFile)
       user.value.avatar_url = response.avatar_url
     } finally {
       isUploadingAvatar.value = false

@@ -1,53 +1,50 @@
+import type { Owner } from './common.types'
+
 export interface ApiCategory {
   id: string
   title: string
   slug: string
   description: string
   created_at: number
+  is_restricted: boolean
 }
 
 export interface ApiTopic {
   id: string
   category_id: string
-  user_id: string
   title: string
+  views_count: number
+  user_id: string
   is_pinned: boolean
   is_locked: boolean
   created_at: number
   updated_at: number
-  owner?: {
-    owner_id: string
-    username: string
-    avatar_url: string
-  }
+  owner?: Owner
 }
 
 export interface ApiPost {
   id: string
   topic_id: string
-  user_id: string
-  content: string
   parent_post_id?: string
+  content_markdown: string
+  is_edited: boolean
+  edited_at: number
+  edited_by: string
   created_at: number
-  updated_at: number
-  owner?: {
-    owner_id: string
-    username: string
-    avatar_url: string
-  }
+  owner?: Owner
 }
 
 export type ApiCategoryResponse = ApiCategory
 
 export interface ApiPaginatedTopics {
   items: ApiTopic[]
-  next_cursor?: string
+  next_cursor?: number
   limit: number
 }
 
 export interface ApiPaginatedPosts {
   items: ApiPost[]
-  next_cursor?: string
+  next_cursor?: number
   limit: number
 }
 
@@ -59,6 +56,7 @@ export interface ApiTopicCreateRequest {
 export interface ApiTopicModerateRequest {
   is_locked?: boolean
   is_pinned?: boolean
+  reason?: string
 }
 
 export interface ApiPostCreateRequest {
@@ -72,10 +70,14 @@ export interface ApiPostUpdateRequest {
 
 export interface IForumApi {
   getCategories(): Promise<ApiCategoryResponse[]>
-  getTopics(categoryId: string, cursor?: string, limit?: number): Promise<ApiPaginatedTopics>
+  getCategory(categoryId: string): Promise<ApiCategoryResponse>
+  getTopics(categoryId: string, cursor?: number, limit?: number): Promise<ApiPaginatedTopics>
+  getTopic(topicId: string): Promise<ApiTopic>
   createTopic(categoryId: string, payload: ApiTopicCreateRequest): Promise<void>
   moderateTopic(topicId: string, payload: ApiTopicModerateRequest): Promise<void>
-  getPosts(topicId: string, cursor?: string, limit?: number): Promise<ApiPaginatedPosts>
+  getPosts(topicId: string, cursor?: number, limit?: number): Promise<ApiPaginatedPosts>
   createPost(topicId: string, payload: ApiPostCreateRequest): Promise<void>
   editPost(postId: string, payload: ApiPostUpdateRequest): Promise<void>
+  deletePost(postId: string, reason: string): Promise<void>
+  deleteTopic(topicId: string, reason: string): Promise<void>
 }

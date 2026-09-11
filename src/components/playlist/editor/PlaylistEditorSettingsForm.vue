@@ -33,7 +33,7 @@ defineEmits<{
           type="checkbox"
           :checked="isPublic"
           @change="$emit('update:isPublic', ($event.target as HTMLInputElement).checked)"
-          class="peer appearance-none w-full h-full rounded border border-primary/30 bg-bg-surface cursor-pointer checked:bg-primary"
+          class="appearance-none w-full h-full rounded border border-primary/30 bg-bg-surface cursor-pointer checked:bg-primary transition-all"
         />
 
         <div class="absolute inset-0 flex items-center justify-center pointer-events-none">

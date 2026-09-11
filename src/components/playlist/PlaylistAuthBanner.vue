@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+import IconLock from '../icons/IconLock.vue'
 
 const router = useRouter()
 </script>
@@ -11,7 +12,7 @@ const router = useRouter()
     <div
       class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary text-2xl font-bold"
     >
-      🔒
+      <IconLock />
     </div>
     <div class="max-w-md flex flex-col gap-2">
       <h2 class="text-2xl font-bold text-text-base">{{ $t('playlist.guest.title') }}</h2>

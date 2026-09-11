@@ -28,11 +28,12 @@ const loadProfile = async () => {
   if (userId && token) {
     try {
       const profile = await userApi.getUserProfile(userId)
-
       isLoggedIn.value = true
       userName.value = profile.username
       avatarUrl.value = profile.avatar_url
       role.value = t(`role.${profile.role}`)
+
+      localStorage.setItem('user_role', profile.role)
     } catch {
       isLoggedIn.value = false
     }

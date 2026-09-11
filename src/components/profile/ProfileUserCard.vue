@@ -10,6 +10,7 @@ defineProps<{
   isUploadingAvatar: boolean
   isSaving: boolean
   apiError: string
+  isOwnProfile: boolean
 }>()
 
 const emit = defineEmits<{
@@ -33,6 +34,7 @@ const handleSave = (nickname: string) => {
       :fallback-letter="avatarLetter"
       :is-uploading="isUploadingAvatar"
       @file-selected="$emit('file-selected', $event)"
+      :is-own-profile="isOwnProfile"
     />
 
     <div class="flex-1 text-center sm:text-left space-y-4 w-full">
@@ -42,10 +44,11 @@ const handleSave = (nickname: string) => {
         :is-saving="isSaving"
         :external-error="apiError"
         @save="handleSave"
+        :is-own-profile="isOwnProfile"
       />
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-        <div>
+        <div v-if="user.email">
           <span class="text-xs uppercase tracking-wider text-text-base/50 font-semibold">{{
             $t('profile.details.email')
           }}</span>

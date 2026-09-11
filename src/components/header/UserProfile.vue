@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import IconUser from '@/components/icons/IconUser.vue'
+import { getUserId } from '@/utils/authUtils'
 
 defineProps<{
   isLoggedIn: boolean
@@ -11,7 +12,7 @@ defineProps<{
 
 <template>
   <router-link
-    :to="isLoggedIn ? '/profile' : '/login'"
+    :to="isLoggedIn ? `/profile/${getUserId()}` : '/login'"
     class="flex items-center gap-4 cursor-pointer hover:opacity-80 transition-opacity"
   >
     <div

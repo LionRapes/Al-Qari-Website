@@ -18,6 +18,19 @@ import { emitEvent } from '@/utils/eventUtils'
 const API_BASE = import.meta.env.VITE_BACKEND_URL
 
 const playlistApi: IPlaylistApi = {
+  async createPlaylist(payload: ApiUpdatePlaylistRequest): Promise<ApiCreatePlaylistResponse> {
+    const res = await fetch(`${API_BASE}/playlists/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      },
+      body: JSON.stringify(payload),
+    })
+    if (!res.ok) throw new Error('Failed to create playlist')
+    return res.json()
+  },
+
   async getPlaylist(playlistId: string): Promise<ApiPlaylist> {
     return cacheService.fetchCached(`${API_BASE}/playlists/${playlistId}`, 5 * 60 * 1000)
   },
@@ -28,16 +41,16 @@ const playlistApi: IPlaylistApi = {
     return res.json()
   },
 
-  async getUserSharedPlaylists(userId: string): Promise<ApiUserPlaylistsResponse> {
-    const res = await fetch(`${API_BASE}/playlists/user/${userId}/shared`, {
+  async getUserSharedPlaylists(): Promise<ApiUserPlaylistsResponse> {
+    const res = await fetch(`${API_BASE}/playlists/shared`, {
       headers: getAuthHeaders(),
     })
     if (!res.ok) throw new Error('Failed to fetch shared playlists')
     return res.json()
   },
 
-  async getUserOwnedPlaylists(userId: string): Promise<ApiUserPlaylistsResponse> {
-    const res = await fetch(`${API_BASE}/playlists/user/${userId}/owned`, {
+  async getUserOwnedPlaylists(): Promise<ApiUserPlaylistsResponse> {
+    const res = await fetch(`${API_BASE}/playlists/owned`, {
       headers: getAuthHeaders(),
     })
     if (!res.ok) throw new Error('Failed to fetch owned playlists')
@@ -52,19 +65,6 @@ const playlistApi: IPlaylistApi = {
       },
     )
     if (!res.ok) throw new Error('Failed to search playlists')
-    return res.json()
-  },
-
-  async createPlaylist(payload: ApiUpdatePlaylistRequest): Promise<ApiCreatePlaylistResponse> {
-    const res = await fetch(`${API_BASE}/playlists/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...getAuthHeaders(),
-      },
-      body: JSON.stringify(payload),
-    })
-    if (!res.ok) throw new Error('Failed to create playlist')
     return res.json()
   },
 

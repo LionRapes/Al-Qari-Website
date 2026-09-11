@@ -6,6 +6,7 @@ const props = defineProps<{
   avatarUrl?: string | null
   fallbackLetter: string
   isUploading: boolean
+  isOwnProfile: boolean
 }>()
 
 const emit = defineEmits<{
@@ -29,8 +30,13 @@ const onFileChange = (event: Event) => {
 </script>
 
 <template>
-  <div class="relative group cursor-pointer shrink-0" @click="triggerUpload">
+  <div
+    class="relative group shrink-0"
+    :class="{ 'cursor-pointer': isOwnProfile }"
+    @click="triggerUpload"
+  >
     <input
+      v-if="isOwnProfile"
       type="file"
       ref="fileInput"
       accept="image/png, image/jpeg, image/webp"
@@ -53,12 +59,13 @@ const onFileChange = (event: Event) => {
     </div>
 
     <div
-      class="absolute inset-0 bg-black/40 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white backdrop-blur-sm"
+      v-if="isOwnProfile"
+      class="absolute inset-0 bg-bg-base/40 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-text-heading backdrop-blur-sm"
       :class="{ 'opacity-100': isUploading }"
     >
       <span
         v-if="isUploading"
-        class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"
+        class="w-5 h-5 border-2 border-text-muted/30 border-t-text-heading rounded-full animate-spin"
       ></span>
       <IconCamera v-else class="w-6 h-6" />
     </div>

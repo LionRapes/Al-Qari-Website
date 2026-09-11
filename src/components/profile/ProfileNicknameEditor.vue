@@ -8,6 +8,7 @@ const props = defineProps<{
   currentNickname: string
   isSaving: boolean
   externalError?: string
+  isOwnProfile: boolean
 }>()
 
 const emit = defineEmits<{
@@ -77,6 +78,7 @@ defineExpose({
     <div v-if="!isEditing" class="flex items-center justify-center sm:justify-start gap-2.5 mt-0.5">
       <span class="text-lg font-medium text-text-base">{{ currentNickname }}</span>
       <button
+        v-if="isOwnProfile"
         type="button"
         @click="startEdit"
         class="text-xs text-primary hover:underline font-medium cursor-pointer"

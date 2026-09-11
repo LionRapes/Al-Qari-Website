@@ -26,11 +26,11 @@ export function usePlaylistsLibrary() {
   const isLoadingPublic = ref(true)
   const searchQuery = ref('')
 
-  const joinPlaylistByToken = async (token: string, userId: string) => {
+  const joinPlaylistByToken = async (token: string) => {
     try {
       const res = await playlistApi.joinPlaylist(token)
       searchQuery.value = ''
-      await fetchPersonalPlaylists(userId)
+      await fetchPersonalPlaylists()
       return { success: true, playlistId: res.playlist_id }
     } catch {
       console.error('Failed to join via token:')
@@ -41,12 +41,12 @@ export function usePlaylistsLibrary() {
     }
   }
 
-  const fetchPersonalPlaylists = async (userId: string) => {
+  const fetchPersonalPlaylists = async () => {
     isLoadingPersonal.value = true
     try {
       const [ownedRes, sharedRes] = await Promise.all([
-        playlistApi.getUserOwnedPlaylists(userId),
-        playlistApi.getUserSharedPlaylists(userId),
+        playlistApi.getUserOwnedPlaylists(),
+        playlistApi.getUserSharedPlaylists(),
       ])
 
       ownedPlaylists.value = ownedRes.playlists.map((p) => ({
@@ -80,7 +80,7 @@ export function usePlaylistsLibrary() {
         title: p.title,
         isPublic: p.is_public,
         role: 'viewer',
-        ownerId: p.owner?.id,
+        owner: p.owner,
       }))
     } catch (error) {
       console.error('Failed to load public playlists:', error)
@@ -103,6 +103,7 @@ export function usePlaylistsLibrary() {
         title: p.title,
         isPublic: p.is_public,
         role: 'viewer',
+        owner: p.owner,
       }))
     } catch (error) {
       console.error('Search failed:', error)

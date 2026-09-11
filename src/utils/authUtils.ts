@@ -6,8 +6,16 @@ export const getUserId = (): string | null => {
   return localStorage.getItem('user_id')
 }
 
+export const getUserRole = (): string | null => {
+  return localStorage.getItem('user_role')
+}
+
 export const isAuth = (): boolean => {
   return Boolean(getAuthToken() && getUserId())
+}
+
+export const isModerator = (): boolean => {
+  return getUserRole() === 'moderator' || getUserRole() === 'admin'
 }
 
 export const getAuth = (): { token: string; userId: string } | null => {

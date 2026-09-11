@@ -30,7 +30,7 @@ const handleTokenJoin = async (token: string) => {
     return
   }
 
-  const result = await joinPlaylistByToken(token, auth.userId)
+  const result = await joinPlaylistByToken(token)
   if (result.success && result.playlistId) {
     router.push(`/playlists/${result.playlistId}`)
   } else {
@@ -39,7 +39,7 @@ const handleTokenJoin = async (token: string) => {
 }
 
 const updatePlaylists = () => {
-  if (auth) fetchPersonalPlaylists(auth.userId)
+  if (auth) fetchPersonalPlaylists()
 }
 
 onMounted(() => {

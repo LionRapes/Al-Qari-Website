@@ -142,6 +142,13 @@
       "logout": "Log Out",
       "notLoggedIn": "You are not signed in.",
       "goToLogin": "Go to Login"
+    },
+    "actions": {
+      "ban": "Ban",
+      "unban": "Unban"
+    },
+    "status": {
+      "banned": "Banned"
     }
   },
   "forum": {
@@ -176,11 +183,48 @@
         "default": "Load More Topics",
         "loading": "Loading..."
       },
+      "moderate": {
+        "button": "Moderate",
+        "title": "Moderate Topic",
+        "pin": "Pin Topic",
+        "lock": "Lock Topic",
+        "cancel": "Cancel",
+        "save": "Save",
+        "saving": "Saving..."
+      },
+      "delete": {
+        "title": "Delete Topic",
+        "button": "Delete Topic",
+        "warning": "Are you sure? Provide a moderation reason below:",
+        "reason_required": "A reason is required to delete.",
+        "reason_placeholder": "Enter deletion reason...",
+        "confirm": "Confirm Delete",
+        "deleting": "Deleting..."
+      },
+      "create": {
+        "title": "Create New Topic",
+        "input_title_label": "Topic Title",
+        "input_title_placeholder": "What is this discussion about?",
+        "input_content_label": "First Post (Markdown Supported)",
+        "input_content_placeholder": "Write your initial post here...",
+        "tab_edit": "Edit",
+        "tab_preview": "Preview",
+        "error_required": "Both title and content are required.",
+        "error_title_length": "Topic title must be at least 3 characters long.",
+        "error_content_length": "First post content must be at least 10 characters long.",
+        "submit_loading": "Posting...",
+        "submit_default": "Create Topic",
+        "cancel": "Cancel"
+      },
+      "locked_title": "This topic is locked",
+      "locked_desc": "You cannot post new replies to this discussion.",
       "unknown_user": "Unknown User"
     },
     "post": {
       "back": "← Back to Topics",
       "title": "Discussion Thread",
+      "author_badge": "Topic author",
+      "edited": "Edited",
 
       "loading": "Loading conversation...",
       "error": {
@@ -197,30 +241,39 @@
 
       "reply": {
         "title": "Leave a Reply",
-        "placeholder": "Type your reply here (Markdown supported)...",
+        "placeholder": "Type your reply here...",
         "error": "Failed to post reply.",
         "submit": {
           "default": "Post Reply",
           "loading": "Posting..."
         }
-      }
-    },
-    "categories": {
-      "news": {
-        "title": "News",
-        "description": "Latest news about Al-Qari Project"
-      }
-    },
-    "topics": {
-      "news": {
-        "announcement": {
-          "title": "Major Update to Al-Qari Platform",
-          "content": "We are excited to announce a new update to the Al-Qari project! The latest version introduces improved recitation tracking, daily learning goals, and a redesigned interface for easier navigation. More enhancements are coming soon — stay tuned!"
-        }
+      },
+      "delete": {
+        "title": "Delete Post",
+        "warning": "Are you sure you want to delete this post? Please provide a moderation reason.",
+        "reason_required": "A reason is required.",
+        "reason_placeholder": "Enter reason for deletion...",
+        "cancel": "Cancel",
+        "confirm": "Delete Post",
+        "deleting": "Deleting..."
+      },
+      "edit": {
+        "button": "Edit",
+        "cancel": "Cancel",
+        "save": "Save",
+        "saving": "Saving..."
       }
     },
     "loading": "Loading categories...",
     "empty": "No categories available at the moment."
+  },
+  "moderation": {
+    "ban": {
+      "title": "Block user",
+      "reasonLabel": "Specify the reason",
+      "reasonPlaceholder": "For example: Spam, rule violation...",
+      "confirm": "Ban"
+    }
   },
   "role": {
     "premium": "Premium",

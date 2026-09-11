@@ -1,3 +1,5 @@
+import type { Owner } from './common.types'
+
 // Consolidated internal state objects for Frontend UI rendering
 export interface UnifiedAyah {
   number: number
@@ -26,11 +28,7 @@ export interface PlaylistSummary {
   isPublic: boolean
   role?: string
   data?: string
-  owner?: {
-    owner_id: string
-    username: string
-    avatar_url: string
-  }
+  owner?: Owner
 }
 
 // Generic UI element types

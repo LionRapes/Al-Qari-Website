@@ -1,3 +1,5 @@
+import type { Owner } from './common.types'
+
 export interface ApiPlaylist {
   id: string
   title: string
@@ -6,11 +8,7 @@ export interface ApiPlaylist {
   forked_from_id: string
   created_at: number
   updated_at: number
-  owner?: {
-    owner_id: string
-    username: string
-    avatar_url: string
-  }
+  owner?: Owner
   added_at?: string
   role?: string
 }
@@ -46,7 +44,6 @@ export interface ApiCreatePlaylistResponse {
 
 export interface ApiShareLinkResponse {
   share_token: string
-  expires_in_hours: number
 }
 
 export interface ApiJoinPlaylistResponse {
@@ -61,6 +58,12 @@ export interface ApiPlaylistRelation {
   added_at?: string
 }
 
+export interface ApiCreatePlaylistRequest {
+  title: string
+  data: string
+  is_public?: boolean
+}
+
 export interface ApiUpdatePlaylistRequest {
   title?: string
   data?: string
@@ -73,13 +76,13 @@ export interface ApiGenerateShareLinkRequest {
 }
 
 export interface IPlaylistApi {
-  getPlaylist(playlistId: string): Promise<ApiPlaylist>
+  createPlaylist(payload: ApiCreatePlaylistRequest): Promise<ApiCreatePlaylistResponse>
   getPublicPlaylists(limit?: number, offset?: number): Promise<ApiPaginatedPlaylists>
-  getUserSharedPlaylists(userId: string): Promise<ApiUserPlaylistsResponse>
-  getUserOwnedPlaylists(userId: string): Promise<ApiUserPlaylistsResponse>
+  getPlaylist(playlistId: string): Promise<ApiPlaylist>
+  getUserSharedPlaylists(): Promise<ApiUserPlaylistsResponse>
+  getUserOwnedPlaylists(): Promise<ApiUserPlaylistsResponse>
   searchPlaylists(q: string, limit?: number): Promise<ApiPaginatedPlaylists>
 
-  createPlaylist(payload: ApiUpdatePlaylistRequest): Promise<ApiCreatePlaylistResponse>
   updatePlaylist(playlistId: string, payload: ApiUpdatePlaylistRequest): Promise<void>
   deletePlaylist(playlistId: string): Promise<void>
   forkPlaylist(playlistId: string): Promise<ApiCreatePlaylistResponse>

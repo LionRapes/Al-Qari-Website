@@ -2,17 +2,20 @@
 import { ref, onMounted } from 'vue'
 import { forumApi } from '@/services/forumApi'
 import type { ApiCategoryResponse } from '@/types/forum.types'
-import { RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { translateOrOriginal } from '@/utils/commonUtils'
 
-const { t, te } = useI18n()
+import CategoryCard from '@/components/forum/index/CategoryCard.vue'
+import ForumLoading from '@/components/forum/ForumLoading.vue'
+import ForumError from '@/components/forum/ForumError.vue'
+import ForumEmpty from '@/components/forum/ForumEmpty.vue'
+
+const { t } = useI18n()
 
 const categories = ref<ApiCategoryResponse[]>([])
 const isLoading = ref(true)
 const error = ref<string | null>(null)
 
-onMounted(async () => {
+const fetchCategories = async () => {
   try {
     isLoading.value = true
     error.value = null
@@ -22,6 +25,10 @@ onMounted(async () => {
   } finally {
     isLoading.value = false
   }
+}
+
+onMounted(() => {
+  fetchCategories()
 })
 </script>
 
@@ -37,69 +44,21 @@ onMounted(async () => {
       </p>
     </div>
 
-    <!-- Loading State -->
-    <div v-if="isLoading" class="flex justify-center items-center py-16">
-      <div class="animate-pulse flex flex-col items-center">
-        <div
-          class="h-8 w-8 rounded-full border-4 border-primary border-t-transparent animate-spin mb-4"
-        ></div>
-        <span class="text-text-muted text-lg">
-          {{ t('forum.loading') }}
-        </span>
-      </div>
-    </div>
+    <!-- Reusable UI States -->
+    <ForumLoading v-if="isLoading" :text="t('forum.loading')" />
 
-    <!-- Error State -->
-    <div
+    <ForumError
       v-else-if="error"
-      class="bg-bg-surface border-l-4 border-text-red p-6 rounded-r-lg shadow-sm"
-    >
-      <div class="flex items-center">
-        <span class="text-text-red font-semibold text-lg">{{ error }}</span>
-      </div>
-      <button
-        @click="forumApi.getCategories()"
-        class="mt-4 text-text-blue hover:text-text-hover transition-colors text-sm font-medium"
-      >
-        {{ t('forum.error.retry') }}
-      </button>
-    </div>
+      :error="error"
+      :retry-text="t('forum.error.retry')"
+      @retry="fetchCategories"
+    />
 
-    <!-- Empty State -->
-    <div
-      v-else-if="categories.length === 0"
-      class="text-center py-16 bg-bg-surface rounded-xl border border-border-theme"
-    >
-      <p class="text-text-muted text-lg">
-        {{ t('forum.empty') }}
-      </p>
-    </div>
+    <ForumEmpty v-else-if="categories.length === 0" :text="t('forum.empty')" />
 
     <!-- Categories Grid -->
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <RouterLink
-        :key="category.id"
-        :to="`/forum/category/${category.id}`"
-        class="group flex flex-col h-full bg-bg-surface border border-border-theme rounded-xl p-6 transition-colors duration-300 hover:bg-bg-surface-hover"
-        v-for="category in categories"
-      >
-        <div class="grow">
-          <h2
-            class="text-xl font-semibold text-primary mb-3 group-hover:text-text-heading transition-colors"
-          >
-            {{ translateOrOriginal(category.title, t, te) }}
-          </h2>
-          <p class="text-text-muted text-sm line-clamp-3">
-            {{ translateOrOriginal(category.description, t, te) }}
-          </p>
-        </div>
-
-        <div class="mt-6 pt-4 border-t border-border-theme flex items-center justify-between">
-          <span class="text-xs font-medium text-text-muted">
-            {{ t('forum.view') }}
-          </span>
-        </div>
-      </RouterLink>
+      <CategoryCard v-for="category in categories" :key="category.id" :category="category" />
     </div>
   </div>
 </template>
